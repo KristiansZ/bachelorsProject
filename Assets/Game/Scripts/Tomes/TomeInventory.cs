@@ -7,11 +7,23 @@ public class TomeInventory : MonoBehaviour
     
     private TomeType[] _equippedTomes = new TomeType[3];
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip switchTomeSFX;
+    [SerializeField] private float switchVolume = 0.7f;
+    private AudioSource audioSource;
+
     private void Awake()
     {
         if (tomeDisplay == null)
         {
             tomeDisplay = FindObjectOfType<TomeDisplay>();
+        }
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
         }
         InitializeEmptySlots();
     }
@@ -39,6 +51,7 @@ public class TomeInventory : MonoBehaviour
                 _equippedTomes[i] = oldTome;
                 
                 UpdateBothSlots(targetSlotIndex, i);
+                PlaySwitchTomeSound();
                 return;
             }
         }
@@ -47,6 +60,7 @@ public class TomeInventory : MonoBehaviour
         _equippedTomes[targetSlotIndex] = newTome;
         UpdateTomeSlot(targetSlotIndex, newTome, GetTomeIcon(newTome));
         TomeController.Instance.AssignTomeToSlot(newTome, targetSlotIndex);
+        PlaySwitchTomeSound();
     }
 
     private void UpdateBothSlots(int slotA, int slotB)
@@ -75,6 +89,14 @@ public class TomeInventory : MonoBehaviour
         }
         
         return sprite;
+    }
+
+    private void PlaySwitchTomeSound()
+    {
+        if (switchTomeSFX != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(switchTomeSFX, switchVolume);
+        }
     }
     
 

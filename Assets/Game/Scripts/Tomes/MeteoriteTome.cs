@@ -9,7 +9,11 @@ public class MeteoriteTome : Tome
     public GameObject burnEffect;
     public float burnDamagePerSecond = 15f;
     public float maxCastDistance = 10f;
-     public float impactRadiusMultiplier = 1f;
+    public float impactRadiusMultiplier = 1f;
+    
+    [Header("Sound Effects")]
+    public AudioClip meteorExplosionSFX;
+    public AudioClip burningSFX;
 
     void Start()
     {
@@ -18,6 +22,17 @@ public class MeteoriteTome : Tome
             baseCooldown = 3f,
             range = 30f
         };
+        
+        //verify sound references
+        if (burningSFX == null)
+        {
+            Debug.LogWarning("burningSFX not assigned");
+        }
+        
+        if (meteorExplosionSFX == null)
+        {
+            Debug.LogWarning("meteorExplosionSFX not assigned");
+        }
     }
 
     protected override void ExecuteCast(Vector3 targetPosition)
@@ -41,13 +56,17 @@ public class MeteoriteTome : Tome
         Vector3 spawnPosition = flatTarget + Vector3.up * spawnHeight;
         var meteor = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
         var meteorProjectile = meteor.GetComponent<MeteoriteProjectile>();
+        
+        if (meteorExplosionSFX != null)//assign sound effects to the projectile
+        {
+            meteorProjectile.meteorExplosionSFX = meteorExplosionSFX;
+        }
 
-        GameObject effectToUse = createsBurnZone ? burnEffect : null;
-        float damageToDeal = createsBurnZone ? burnDamagePerSecond : 0;
-
+        //set leavesBurningGround directly on the projectile
+        meteorProjectile.leavesBurningGround = createsBurnZone;
+        
         meteorProjectile.SetImpactRadiusMultiplier(impactRadiusMultiplier);
-
-        meteorProjectile.Initialize(_currentDamage, flatTarget, effectToUse, damageToDeal);
+        meteorProjectile.Initialize(_currentDamage, flatTarget, burnEffect, burnDamagePerSecond, burningSFX);
     }
 
     public void EnableBurnZone(GameObject effectPrefab, float damage = 30f)
@@ -56,7 +75,6 @@ public class MeteoriteTome : Tome
         burnEffect = effectPrefab;
         burnDamagePerSecond = damage;
     }
-
 
     #region Upgrades
     public void UpgradeImpactRadius(float value) => impactRadiusMultiplier += value;

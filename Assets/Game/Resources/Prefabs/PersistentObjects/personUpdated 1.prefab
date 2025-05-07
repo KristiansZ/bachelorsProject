@@ -68,6 +68,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tomeDisplay: {fileID: 0}
+  switchTomeSFX: {fileID: 8300000, guid: 306ade8bf8b4f3048b519cf5c02f63b7, type: 3}
+  switchVolume: 0.7
 --- !u!1001 &6823571276113773544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -321,6 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Stats: {fileID: 0}
+  DamageHandler: {fileID: 0}
   Leveling: {fileID: 0}
   PlayerController: {fileID: 0}
   PlayerTransform: {fileID: 0}
@@ -342,8 +345,6 @@ MonoBehaviour:
   damageFlashDuration: 0.1
   hitVFXPrefab: {fileID: 0}
   hitSounds: []
-  lowHealthSound: {fileID: 0}
-  lowHealthThreshold: 25
 --- !u!4 &6429038625546003459 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 370ed01e3124e5d43a61183022d2719a, type: 3}

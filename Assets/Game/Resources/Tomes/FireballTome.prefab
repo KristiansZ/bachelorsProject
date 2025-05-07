@@ -55,17 +55,18 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1307734381382588898, guid: a001e49e8a32dc34a9455b3a2413ce46, type: 3}
   damageMultiplier: 1
   currentCooldown: 0
+  enableContinuousCasting: 1
   stats:
     baseDamage: 20
     baseCooldown: 1
     projectileSpeed: 15
     range: 15
-  castSound: {fileID: 0}
   castParticles: {fileID: 47447122841089355, guid: b41432a5f0ea3854aa87d1feb1f6e19e, type: 3}
   fireballOffset: 0.8
   extraProjectiles: 0
   spreadAngle: 15
   scaleMultiplier: 1
+  fireballSFX: {fileID: 8300000, guid: 8973cabb05970154a856e19b7e84a346, type: 3}
 --- !u!1 &4406421647415216976
 GameObject:
   m_ObjectHideFlags: 0

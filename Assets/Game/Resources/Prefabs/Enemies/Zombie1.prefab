@@ -401,6 +401,8 @@ MonoBehaviour:
   dissolveMaterialTemplate: {fileID: 2100000, guid: 6fdc8d1bc1da3464c8f7364c4dc893a6, type: 2}
   chaseUpdateRate: 0.1
   detectionRange: 10
+  attackSound: {fileID: 8300000, guid: 5c97c3cdd74be1e4e800daf7c3e6cfee, type: 3}
+  deathSound: {fileID: 8300000, guid: 3c2139ab58087f14fb5bc02fa8fd65cd, type: 3}
 --- !u!54 &4263404499713845750
 Rigidbody:
   m_ObjectHideFlags: 0

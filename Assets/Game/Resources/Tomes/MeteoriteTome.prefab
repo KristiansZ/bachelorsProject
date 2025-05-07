@@ -61,7 +61,6 @@ MonoBehaviour:
     baseCooldown: 5
     projectileSpeed: 0
     range: 10
-  castSound: {fileID: 0}
   castParticles: {fileID: 47447122841089355, guid: b41432a5f0ea3854aa87d1feb1f6e19e, type: 3}
   meteorPrefab: {fileID: 9036892506192677148, guid: f58061dd990428940a81d5ff983905e4, type: 3}
   spawnHeight: 25
@@ -70,6 +69,8 @@ MonoBehaviour:
   burnDamagePerSecond: 15
   maxCastDistance: 10
   impactRadiusMultiplier: 1
+  meteorExplosionSFX: {fileID: 8300000, guid: bd7ad01c0219e2244b03c931877ce602, type: 3}
+  burningSFX: {fileID: 8300000, guid: b344e190116d16241b9eec4a524a8a5a, type: 3}
 --- !u!1 &7344593753207837288
 GameObject:
   m_ObjectHideFlags: 0

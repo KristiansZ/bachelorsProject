@@ -4,14 +4,14 @@ public abstract class Tome : MonoBehaviour
 {
     public TomeType tomeType;
     public Sprite iconSprite;
-    public CastMode castMode = CastMode.Directional; // Prefab driven
+    public CastMode castMode = CastMode.Directional;
 
-    public GameObject projectilePrefab;  // For instantiating projectiles
-    public float damageMultiplier = 1f;  // For global damage bonuses
-    public float currentCooldown;        // Track when tome can be used again
+    public GameObject projectilePrefab;
+    public float damageMultiplier = 1f;
+    public float currentCooldown;
 
     [Header("Casting Behavior")]
-    public bool enableContinuousCasting = true;  // Enable continuous casting by default
+    public bool enableContinuousCasting = true;
 
     public Sprite GetIcon() => iconSprite;
 
@@ -26,7 +26,7 @@ public abstract class Tome : MonoBehaviour
 
     [Header("Base Configuration")]
     public TomeStats stats;
-    public AudioClip castSound;
+    //might want later     public AudioClip castSound; 
     public ParticleSystem castParticles;
 
     protected float _currentDamage;
@@ -125,7 +125,7 @@ public abstract class Tome : MonoBehaviour
 
     protected void PlayEffects()
     {
-        _audioSource?.PlayOneShot(castSound);
+        //_audioSource?.PlayOneShot(castSound);
         castParticles?.Play();
     }
 

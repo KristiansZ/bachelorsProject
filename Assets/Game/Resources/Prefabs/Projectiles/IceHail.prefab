@@ -9832,6 +9832,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b58a86d6044aa4fa440102a104716e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hailHitSFX:
+  - {fileID: 8300000, guid: 92675f323b7f034498c4958ba8969380, type: 3}
+  - {fileID: 8300000, guid: 94dd0b5070f689f4ab26a382d674acef, type: 3}
+  - {fileID: 8300000, guid: b1e868d795aa9254c932ff0f11a9d430, type: 3}
+  hailHitVolume: 0.7
 --- !u!1 &3492729133340602693
 GameObject:
   m_ObjectHideFlags: 0

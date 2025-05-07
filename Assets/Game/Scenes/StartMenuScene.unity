@@ -621,7 +621,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7bb7e5572bcb4b541b125baa8a2b000b, type: 3}
   - {fileID: 8300000, guid: 6e5aa93597bd05c4b9240e751fe3ebb1, type: 3}
   bossMusic: {fileID: 8300000, guid: 664e6b2bdfa93f04d82cca68c5d13cbc, type: 3}
-  musicVolume: 0.5
+  musicVolume: 0
   fadeTime: 2
 --- !u!4 &1112378656
 Transform:

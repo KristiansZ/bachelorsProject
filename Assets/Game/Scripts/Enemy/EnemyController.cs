@@ -17,6 +17,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float chaseUpdateRate = 0.03f;
     [SerializeField] private float detectionRange = 12f;
 
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip deathSound;
+    private AudioSource audioSource;
+
     private Material instancedDissolveMaterial;
     private Renderer enemyRenderer;
 
@@ -44,6 +49,17 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         enemyRenderer = GetComponentInChildren<Renderer>();
+        
+        //if no audio source add one
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.spatialBlend = 1.0f;
+            audioSource.rolloffMode = AudioRolloffMode.Linear;
+            audioSource.minDistance = 5f;
+            audioSource.maxDistance = 20f;
+        }
     }
 
     void Start()
@@ -309,6 +325,7 @@ public class EnemyController : MonoBehaviour
 
             if (Player.Instance != null && Player.Instance.DamageHandler != null)
             {
+                PlayAttackSound();
                 Player.Instance.DamageHandler.HandleDamage(stats.damage);
             }
 
@@ -326,6 +343,29 @@ public class EnemyController : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(dirToTarget);
         }
     }
+
+    #region Sound Effects
+
+    private void PlayAttackSound()
+    {
+        if (audioSource != null && attackSound != null)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.1f); //random pitch so its not always the same
+            audioSource.PlayOneShot(attackSound);
+        }
+    }
+
+    private void PlayDeathSound()
+    {
+        if (audioSource != null && deathSound != null)
+        {
+            //higher priority to death sound
+            audioSource.priority = 128;
+            audioSource.PlayOneShot(deathSound);
+        }
+    }
+
+    #endregion
 
     #region Status Effects
 
@@ -412,6 +452,8 @@ public class EnemyController : MonoBehaviour
         SetState(State.Dead);
         
         StopAllCoroutines();
+        
+        PlayDeathSound();
         
         DisableColliders();
         AwardExperienceAndNotify();

@@ -7,6 +7,7 @@ public class FireballTome : Tome
     public int extraProjectiles = 0;
     public float spreadAngle = 15f;
     public float scaleMultiplier = 1f;
+    public AudioClip fireballSFX;
 
     private void Start()
     {
@@ -37,6 +38,7 @@ public class FireballTome : Tome
 
         float finalDamage = stats.baseDamage * (1f + TomeController.Instance.globalDamageBonus);
 
+
         LaunchProjectile(spawnPos, direction, finalDamage);
 
         for (int i = 0; i < extraProjectiles; i++)
@@ -57,8 +59,15 @@ public class FireballTome : Tome
         projectile.transform.localScale *= scaleMultiplier;
 
         FireballProjectile fireball = projectile.GetComponent<FireballProjectile>();
+
+
         if (fireball != null)
         {
+            if (fireballSFX != null)//assign sound effects to the projectile
+            {
+                fireball.fireballSFX = fireballSFX;
+            }
+
             direction = direction.normalized;
             Vector3 velocity = direction * stats.projectileSpeed;
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 public class MeteoriteProjectile : MonoBehaviour
 {
@@ -10,13 +11,20 @@ public class MeteoriteProjectile : MonoBehaviour
     public GameObject impactEffect;
     
     [Header("Trajectory Settings")]
-    [Range(15f, 60f)] public float entryAngleVariance = 30f; // Range of angle variation from vertical
+    [Range(15f, 60f)] public float entryAngleVariance = 30f;
     
     [Header("Burn Settings")]
     public bool leavesBurningGround = false;
     public GameObject burnEffect;
     public float burnDuration = 4f;
     public float burnDamagePerSecond = 15f;
+    public AudioClip burningSoundEffect;  //added direct reference for burn sound
+    
+    [Header("Sound Effects")]
+    public AudioClip meteorExplosionSFX;
+    [Range(0f, 1f)] public float explosionVolume = 0.7f;
+    [Range(0f, 1f)] public float explosionTimeOffset = 0.1f;  //skip empty part at beginning
+    private AudioSource _audioSource;
 
     private Vector3 _targetPosition;
     private Vector3 _startPosition;
@@ -25,12 +33,13 @@ public class MeteoriteProjectile : MonoBehaviour
     private float _journeyLength;
     private float _startTime;
 
-    public void Initialize(float damageAmount, Vector3 targetPos, GameObject burnPrefab, float burnDPS = 0)
+    public void Initialize(float damageAmount, Vector3 targetPos, GameObject burnPrefab, float burnDPS = 0, AudioClip burnSFX = null)
     {
         damage = damageAmount;
         _targetPosition = targetPos;
         burnEffect = burnPrefab;
         burnDamagePerSecond = burnDPS;
+        burningSoundEffect = burnSFX;  //store burn SFX directly
         
         //generate random starting position above and around target
         float randomAngle = Random.Range(0f, 360f); //random angle around target
@@ -67,6 +76,13 @@ public class MeteoriteProjectile : MonoBehaviour
         {
             collider.isTrigger = true;
         }
+        
+        //audio source
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        _audioSource.playOnAwake = false;
+        _audioSource.spatialBlend = 1.0f;
+        _audioSource.rolloffMode = AudioRolloffMode.Linear;
+        _audioSource.maxDistance = 30f;
     }
 
     void Update()
@@ -92,7 +108,22 @@ public class MeteoriteProjectile : MonoBehaviour
 
     void OnImpact()
     {
-        // Visual effect
+        if (meteorExplosionSFX != null)
+        {
+            //create a temporary audio source to play the sound because the meteor is destrpoyed
+            GameObject tempAudio = new GameObject("TempExplosionAudio");
+            tempAudio.transform.position = transform.position;
+            AudioSource tempSource = tempAudio.AddComponent<AudioSource>();
+            tempSource.clip = meteorExplosionSFX;
+            tempSource.volume = explosionVolume;
+            tempSource.spatialBlend = 1.0f;
+            tempSource.time = explosionTimeOffset;  //skip the first 0.1 seconds because its just silence
+            tempSource.Play();
+            
+            //destroy the temporary object after the sound finishes
+            Destroy(tempAudio, meteorExplosionSFX.length);
+        }
+        
         if (impactEffect != null)
         {
             Instantiate(impactEffect, transform.position, Quaternion.identity);
@@ -107,7 +138,7 @@ public class MeteoriteProjectile : MonoBehaviour
             }
         }
 
-        if (burnEffect != null && leavesBurningGround) //spawns bur effect
+        if (burnEffect != null && leavesBurningGround) //spawns burn effect
         {
             Vector3 burnSpawnPosition = transform.position;
             if (GetComponent<Collider>() != null)
@@ -123,6 +154,22 @@ public class MeteoriteProjectile : MonoBehaviour
             BurnZoneEffect burnZone = burn.AddComponent<BurnZoneEffect>();
             burnZone.damagePerSecond = burnDamagePerSecond;
             burnZone.burnRadius = impactRadius;
+            
+            //directly pass the burn sound effect
+            if (burningSoundEffect != null)
+            {
+                burnZone.burningSFX = burningSoundEffect;
+            }
+            else //fallback
+            {
+                Debug.LogWarning("No burn sound effect assigned to meteorite");
+                MeteoriteTome tome = FindObjectOfType<MeteoriteTome>();
+                if (tome != null && tome.burningSFX != null)
+                {
+                    burnZone.burningSFX = tome.burningSFX;
+                    Debug.Log("Using fallback sound from MeteoriteTome");
+                }
+            }
 
             Destroy(burn, burnDuration);
         }

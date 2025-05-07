@@ -267,10 +267,13 @@ MonoBehaviour:
   fallSpeed: 25
   impactRadius: 3
   impactEffect: {fileID: 0}
+  entryAngleVariance: 30
   leavesBurningGround: 1
   burnEffect: {fileID: 0}
   burnDuration: 4
   burnDamagePerSecond: 15
+  meteorExplosionSFX: {fileID: 0}
+  explosionVolume: 1
 --- !u!54 &-518638729106362424
 Rigidbody:
   m_ObjectHideFlags: 0

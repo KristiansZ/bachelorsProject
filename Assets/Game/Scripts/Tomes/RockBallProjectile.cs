@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class RockBallProjectile : MonoBehaviour
 {
+    [Header("Settings")]
+    public AudioClip rockImpactSFX;
+    [Range(0f, 1f)] public float impactVolume = 0.8f;
+
     private Rigidbody _rb;
     private float _damage;
     private Vector3 _velocity;
@@ -25,8 +29,7 @@ public class RockBallProjectile : MonoBehaviour
             _rb.linearVelocity = _velocity;
         }
 
-        //fallback destroy if it never hits anything and doesnt pass max range
-        Destroy(gameObject, 5f);
+        Destroy(gameObject, 5f); //fallback
     }
 
     private void Update()
@@ -41,13 +44,36 @@ public class RockBallProjectile : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Portal"))
-        {
             return;
-        }
+
         if (other.CompareTag("Enemy"))
         {
             other.GetComponent<EnemyController>()?.TakeDamage(_damage);
         }
+
+        PlayRockImpactSound();
+
         Destroy(gameObject);
+    }
+
+    private void PlayRockImpactSound()
+    {
+        if (rockImpactSFX == null) return;
+
+        GameObject tempAudio = new GameObject("TempRockImpactAudio");
+        tempAudio.transform.position = transform.position;
+
+        AudioSource tempSource = tempAudio.AddComponent<AudioSource>();
+        tempSource.clip = rockImpactSFX;
+        tempSource.volume = impactVolume;
+        tempSource.spatialBlend = 1.0f;
+        tempSource.rolloffMode = AudioRolloffMode.Linear;
+        tempSource.time = 0.05f;
+        tempSource.minDistance = 2f;
+        tempSource.maxDistance = 25f;
+
+        tempSource.Play();
+
+        Destroy(tempAudio, rockImpactSFX.length);
     }
 }

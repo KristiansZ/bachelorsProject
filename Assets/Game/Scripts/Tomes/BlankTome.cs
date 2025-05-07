@@ -4,6 +4,7 @@ public class BlankTome : Tome
 {
     [Header("RockBall Configuration")]
     public float rockBallOffset = 1.5f; //distance in front of the player for shootign
+    public AudioClip rockImpactSFX;
 
     private void Start()
     {
@@ -47,8 +48,13 @@ public class BlankTome : Tome
             rockBall.Initialize(
                 _currentDamage,
                 velocity,
-                stats.range //pass range data to projectile
+                stats.range
             );
+
+            if (rockImpactSFX != null)
+            {
+                rockBall.rockImpactSFX = rockImpactSFX;
+            }
         }
     }
 }
