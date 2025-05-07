@@ -371,7 +371,6 @@ MonoBehaviour:
   enemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
   player: {fileID: 0}
   dungeonGenerator: {fileID: 1772309357}
-  startRoomName: Room_0
   enemyTypes:
   - stats: {fileID: 11400000, guid: 25f49c2305d1bfa4bacfd768940ea237, type: 2}
     spawnWeight: 1
@@ -380,11 +379,9 @@ MonoBehaviour:
   maxEnemiesPerRoom: 5
   activationDistance: 30
   deactivationDistance: 40
-  navMeshCheckRadius: 3
   bossPrefab: {fileID: 62651155189986703, guid: 7da27222843cc8d40b88755665cbb7d8, type: 3}
   bossStats: {fileID: 11400000, guid: b3cca282617085d4e98453b69277c5a9, type: 2}
   bossRoomType: 2
-  bossCount: 1
   poolContainer: {fileID: 0}
 --- !u!4 &1404596693
 Transform:
@@ -444,11 +441,11 @@ MonoBehaviour:
   - {fileID: 2314118587408295695, guid: bf5ff691e487d7f49b79363ca2cd5999, type: 3}
   roomCount: 20
   wallCapPrefab: {fileID: 1945119836118118461, guid: 03de72c37be576e42b08c270fbb88060, type: 3}
+  navMeshSurface: {fileID: 1007756974}
   spawnedRooms: []
   spawnedHallways: []
   allSpawnedObjects: []
   lastSpawnRoom: {fileID: 0}
-  navMeshSurface: {fileID: 1007756974}
 --- !u!4 &1772309358
 Transform:
   m_ObjectHideFlags: 0
@@ -493,6 +490,51 @@ MonoBehaviour:
   meshValidationRays: 5
   meshValidationRadius: 0.5
   minRayHitPercentage: 0.6
+--- !u!1 &1821263937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1821263939}
+  - component: {fileID: 1821263938}
+  m_Layer: 0
+  m_Name: SceneMusicController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1821263938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1821263937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4499b3504eaa62e40bfcf1c9f613b858, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneType: 2
+--- !u!4 &1821263939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1821263937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.7710629, y: -11.863963, z: 12.70174}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -503,3 +545,4 @@ SceneRoots:
   - {fileID: 1772309358}
   - {fileID: 1404596693}
   - {fileID: 1007756973}
+  - {fileID: 1821263939}

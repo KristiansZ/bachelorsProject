@@ -45,7 +45,7 @@ public class IceHailTome : Tome
             {
                 var collisionModule = particleSystem.collision;
                 collisionModule.enabled = true;
-                collisionModule.collidesWith = LayerMask.GetMask("Enemy");
+                collisionModule.collidesWith = LayerMask.GetMask("Enemy", "Ground");
 
                 float duration = particleSystem.main.duration + particleSystem.main.startLifetime.constantMax - 0.5f;
                 Destroy(hail, duration);

@@ -67,7 +67,10 @@ public class GameEnd : MonoBehaviour
 
         foreach (GameObject obj in rootObjects)
         {
-            Destroy(obj);
+            if (obj.GetComponent<MusicManager>() == null)
+            {
+                Destroy(obj);
+            }
         }
     }
 }
