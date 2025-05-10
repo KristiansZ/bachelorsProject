@@ -8,15 +8,15 @@ public class FireballProjectile : MonoBehaviour
     [Range(0f, 1f)] public float explosionVolume = 0.7f;
     
     private AudioSource audioSource;
-    private Rigidbody _rb;
-    private Vector3 _velocity;
-    private float _damage;
-    private Vector3 _startPosition;
-    private float _maxRange;
+    private Rigidbody rb;
+    private Vector3 velocity;
+    private float damage;
+    private Vector3 startPosition;
+    private float maxRange;
 
     void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -32,21 +32,21 @@ public class FireballProjectile : MonoBehaviour
 
     public void Initialize(float damageAmount, Vector3 velocity, float range)
     {
-        _damage = damageAmount;
-        _velocity = velocity;
-        _maxRange = range;
-        _startPosition = transform.position;
+        damage = damageAmount;
+        velocity = velocity;
+        maxRange = range;
+        startPosition = transform.position;
 
-        if (_rb != null)
+        if (rb != null)
         {
-            _rb.linearVelocity = _velocity;
+            rb.linearVelocity = velocity;
         }
     }
 
     void Update()
     {
-        float traveledDistance = Vector3.Distance(_startPosition, transform.position);
-        if (traveledDistance >= _maxRange)
+        float traveledDistance = Vector3.Distance(startPosition, transform.position);
+        if (traveledDistance >= maxRange)
         {
             Destroy(gameObject);
         }
@@ -61,7 +61,7 @@ public class FireballProjectile : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<EnemyController>()?.TakeDamage(_damage);
+            other.GetComponent<EnemyController>()?.TakeDamage(damage);
 
             if (impactEffect != null)
             {

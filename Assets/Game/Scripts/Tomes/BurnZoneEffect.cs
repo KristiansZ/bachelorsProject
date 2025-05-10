@@ -12,27 +12,27 @@ public class BurnZoneEffect : MonoBehaviour
     public AudioClip burningSFX;
     [Range(0f, 1f)] public float burnVolume = 0.5f;
     
-    private Dictionary<EnemyController, float> _burningEnemies = new Dictionary<EnemyController, float>();
-    private float _lastDamageTime;
-    private float _damageInterval = 0.5f;
-    private AudioSource _audioSource;
+    private Dictionary<EnemyController, float> burningEnemies = new Dictionary<EnemyController, float>();
+    private float lastDamageTime;
+    private float damageInterval = 0.5f;
+    private AudioSource audioSource;
     
     void Start()
     {
-        _lastDamageTime = Time.time;
+        lastDamageTime = Time.time;
         
         //audio source
-        _audioSource = gameObject.AddComponent<AudioSource>();
-        _audioSource.clip = burningSFX;
-        _audioSource.loop = true;
-        _audioSource.volume = 0.75f;
-        _audioSource.spatialBlend = 0.8f;
-        _audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
-        _audioSource.priority = 0;
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = burningSFX;
+        audioSource.loop = true;
+        audioSource.volume = 0.75f;
+        audioSource.spatialBlend = 0.8f;
+        audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+        audioSource.priority = 0;
         
         if (burningSFX != null)
         {
-            _audioSource.Play();
+            audioSource.Play();
         }
         else
         {
@@ -57,27 +57,27 @@ public class BurnZoneEffect : MonoBehaviour
                 {
                     //if this enemy was already burning, keep their burn time
                     float burnTime = 0f;
-                    _burningEnemies.TryGetValue(enemy, out burnTime);
+                    burningEnemies.TryGetValue(enemy, out burnTime);
                     stillInRange[enemy] = burnTime;
                 }
             }
         }
         
-        _burningEnemies = stillInRange;
+        burningEnemies = stillInRange;
         
         //apply damage at the specified interval
-        if (Time.time >= _lastDamageTime + _damageInterval)
+        if (Time.time >= lastDamageTime + damageInterval)
         {
             ApplyBurnDamage();
-            _lastDamageTime = Time.time;
+            lastDamageTime = Time.time;
         }
     }
     
     void ApplyBurnDamage()
     {
-        float damageAmount = damagePerSecond * _damageInterval;
+        float damageAmount = damagePerSecond * damageInterval;
         
-        foreach (var enemy in _burningEnemies.Keys)
+        foreach (var enemy in burningEnemies.Keys)
         {
             enemy.TakeDamage(damageAmount);
         }

@@ -18,7 +18,7 @@ public class DungeonGenerator : MonoBehaviour
     public List<Room> spawnedHallways = new();
     [HideInInspector]
     public List<GameObject> allSpawnedObjects = new();
-    public Room lastSpawnRoom;
+    public Room startRoom;
 
     public delegate void NavMeshReadyDelegate();
     [SerializeField] public event NavMeshReadyDelegate OnNavMeshReady;
@@ -75,11 +75,10 @@ public class DungeonGenerator : MonoBehaviour
     void GenerateDungeon()
     {
         GameObject startRoomObj = Instantiate(roomPrefabs[Random.Range(0, roomPrefabs.Count)], Vector3.zero, Quaternion.identity);
-        Room startRoom = startRoomObj.GetComponent<Room>();
+        startRoom = startRoomObj.GetComponent<Room>();
         startRoom.spawnPoints.roomType = RoomSpawnPoints.RoomType.Normal;
         spawnedRooms.Add(startRoom);
         allSpawnedObjects.Add(startRoomObj);
-        lastSpawnRoom = startRoom;
 
         int currentRoomCount = 1;
         int attempts = 0;
@@ -165,7 +164,7 @@ public class DungeonGenerator : MonoBehaviour
         
         if (bossRoomPrefab == null)
         {
-            Debug.LogError("Boss Room Prefab is not assigned in DungeonGenerator!");
+            Debug.LogError("Boss Room Prefab is not assigned in DungeonGenerator");
             return;
         }
         
@@ -173,7 +172,7 @@ public class DungeonGenerator : MonoBehaviour
         Room bossRoom = bossRoomObj.GetComponent<Room>();
         if (bossRoom == null)
         {
-            Debug.LogError("Boss room prefab does not have a Room component attached!");
+            Debug.LogError("Boss room prefab does not have a Room component attached");
             Destroy(bossRoomObj);
             return;
         }
@@ -181,7 +180,7 @@ public class DungeonGenerator : MonoBehaviour
         bossRoom.spawnPoints.roomType = RoomSpawnPoints.RoomType.Boss;
         spawnedRooms.Add(bossRoom);
         allSpawnedObjects.Add(bossRoomObj);
-        lastSpawnRoom = bossRoom;
+        startRoom = bossRoom;
     }
 
     void AlignRoom(Transform from, Transform to, GameObject room)
@@ -215,7 +214,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         Bounds newBounds = GetObjectBounds(newObject);
         
-        // Check against existing rooms and hallways
+        //check against existing rooms and hallways
         foreach (var existingObj in spawnedRooms)
         {
             if (existingObj == null || existingObj.gameObject == null) continue;
@@ -252,13 +251,13 @@ public class DungeonGenerator : MonoBehaviour
 
     void CapUnusedConnections()
     {
-        // cap rooms
+        //cap rooms
         foreach (Room room in spawnedRooms)
         {
             CapRoomConnections(room);
         }
 
-        // cap hallways
+        //cap hallways
         foreach (Room hallway in spawnedHallways)
         {
             CapRoomConnections(hallway);

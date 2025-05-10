@@ -23,6 +23,12 @@ public class LampPlacer : MonoBehaviour
     public float meshValidationRadius = 0.5f;
     public float minRayHitPercentage = 0.6f;
     
+    [Header("Light Colour Settings")]
+    public Color defaultLampColour = new Color(1.0f, 0.5f, 0.0f, 1.0f);
+    public Color activatedLampColour = Color.green;
+    public float playerDetectionRadius = 5.0f;
+    public string playerTag = "Player";
+    
     private DungeonGenerator dungeonGenerator;
     private List<GameObject> spawnedLamps = new List<GameObject>();
     
@@ -91,7 +97,7 @@ public class LampPlacer : MonoBehaviour
                 
                 wallDirection = new Vector3(-xOffset, 0, -zOffset).normalized;
             }
-            else // random position and wall side
+            else //random position and wall side
             {
                 int side = Random.Range(0, 4);
                 
@@ -229,6 +235,23 @@ public class LampPlacer : MonoBehaviour
         else //no wall direction, just random rotation
         {
             lamp.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+        }
+        
+        //proximity controller component to handle color change
+        LampProximityController proximityController = lamp.AddComponent<LampProximityController>();
+        if (proximityController != null)
+        {
+            proximityController.defaultColour = defaultLampColour;
+            proximityController.activatedColour = activatedLampColour;
+            proximityController.detectionRadius = playerDetectionRadius;
+            proximityController.playerTag = playerTag;
+            
+            Light lampLight = lamp.GetComponentInChildren<Light>();
+            if (lampLight != null)
+            {
+                proximityController.lampLight = lampLight;
+                lampLight.color = defaultLampColour;
+            }
         }
         
         spawnedLamps.Add(lamp);

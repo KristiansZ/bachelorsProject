@@ -6,27 +6,27 @@ public class RockBallProjectile : MonoBehaviour
     public AudioClip rockImpactSFX;
     [Range(0f, 1f)] public float impactVolume = 0.8f;
 
-    private Rigidbody _rb;
-    private float _damage;
-    private Vector3 _velocity;
-    private Vector3 _startPosition;
-    private float _maxRange;
+    private Rigidbody rb;
+    private float damage;
+    private Vector3 velocity;
+    private Vector3 startPosition;
+    private float maxRange;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public void Initialize(float damageAmount, Vector3 velocity, float range)
     {
-        _damage = damageAmount;
-        _velocity = velocity;
-        _maxRange = range;
-        _startPosition = transform.position;
+        damage = damageAmount;
+        velocity = velocity;
+        maxRange = range;
+        startPosition = transform.position;
 
-        if (_rb != null)
+        if (rb != null)
         {
-            _rb.linearVelocity = _velocity;
+            rb.linearVelocity = velocity;
         }
 
         Destroy(gameObject, 5f); //fallback
@@ -34,8 +34,8 @@ public class RockBallProjectile : MonoBehaviour
 
     private void Update()
     {
-        float traveledDistance = Vector3.Distance(_startPosition, transform.position);
-        if (traveledDistance >= _maxRange)
+        float traveledDistance = Vector3.Distance(startPosition, transform.position);
+        if (traveledDistance >= maxRange)
         {
             Destroy(gameObject);
         }
@@ -48,7 +48,7 @@ public class RockBallProjectile : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<EnemyController>()?.TakeDamage(_damage);
+            other.GetComponent<EnemyController>()?.TakeDamage(damage);
         }
 
         PlayRockImpactSound();

@@ -8,20 +8,23 @@ public class DungeonEnemyManager : MonoBehaviour
     [System.Serializable]
     public class EnemyTypeConfig
     {
+        public string enemyName;
+        public GameObject enemyPrefab;
         public EnemyStats stats;
         public float spawnWeight = 1f;
         public RoomSpawnPoints.RoomType[] validRoomTypes = { RoomSpawnPoints.RoomType.Normal };
     }
 
     [Header("References")]
-    [SerializeField] GameObject enemyPrefab;
+    [SerializeField] GameObject defaultEnemyPrefab; //fallback if no enemies set
     [SerializeField] Transform player;
     [SerializeField] DungeonGenerator dungeonGenerator;
+    [SerializeField] PlayerLeveling playerLeveling;
 
     [Header("Spawn Settings")]
     [SerializeField] EnemyTypeConfig[] enemyTypes;
-    [SerializeField] int minEnemiesPerRoom = 2;
-    [SerializeField] int maxEnemiesPerRoom = 5;
+    [SerializeField] int minEnemiesPerSpawnPoint = 1; 
+    [SerializeField] int maxEnemiesPerSpawnPoint = 4; 
     [SerializeField] float activationDistance = 30f;
     [SerializeField] float deactivationDistance = 40f;
 
@@ -32,7 +35,7 @@ public class DungeonEnemyManager : MonoBehaviour
     
     [SerializeField] private Transform poolContainer;
     
-    private ObjectPool enemyPool;
+    private Dictionary<GameObject, ObjectPool> enemyPools = new Dictionary<GameObject, ObjectPool>(); //multiple pools for different enemy types
     private Dictionary<RoomSpawnPoints, List<GameObject>> spawnedEnemiesByRoom = new Dictionary<RoomSpawnPoints, List<GameObject>>();
     private HashSet<RoomSpawnPoints> activeRooms = new HashSet<RoomSpawnPoints>();
     private HashSet<RoomSpawnPoints> populatedRooms = new HashSet<RoomSpawnPoints>(); 
@@ -43,6 +46,8 @@ public class DungeonEnemyManager : MonoBehaviour
     private bool hasRegisteredTotalWithPortal = false;
     private int totalSpawnedEnemies = 0;
     private bool isBossDungeon = false;
+    private Dictionary<GameObject, GameObject> enemyPrefabLookup = new Dictionary<GameObject, GameObject>();
+    private int playerLevel = 1;
 
     void Awake()
     {
@@ -51,6 +56,27 @@ public class DungeonEnemyManager : MonoBehaviour
         if (dungeonGenerator == null)
         {
             dungeonGenerator = FindObjectOfType<DungeonGenerator>();
+        }
+
+        //find PlayerLeveling if not assigned
+        if (playerLeveling == null && player != null)
+        {
+            playerLeveling = player.GetComponent<PlayerLeveling>();
+            if (playerLeveling == null)
+            {
+                playerLeveling = player.GetComponentInChildren<PlayerLeveling>();
+            }
+        }
+
+        //get current player level
+        if (playerLeveling != null)
+        {
+            playerLevel = playerLeveling.currentLevel;
+            Debug.Log($"Player level for enemy scaling: {playerLevel}");
+        }
+        else
+        {
+            Debug.LogWarning("PlayerLeveling reference not found. Using default level 1 for enemy scaling.");
         }
 
         if (dungeonGenerator != null)
@@ -83,35 +109,62 @@ public class DungeonEnemyManager : MonoBehaviour
         else
         {
             //get start room from dungeon generator (no enemies in start room)
-            if (dungeonGenerator != null && dungeonGenerator.lastSpawnRoom != null)
+            if (dungeonGenerator != null && dungeonGenerator.startRoom != null)
             {
-                startRoom = dungeonGenerator.lastSpawnRoom.GetComponent<RoomSpawnPoints>();
+                startRoom = dungeonGenerator.startRoom.GetComponent<RoomSpawnPoints>();
             }
             else
             {
                 Debug.LogWarning("Could not identify start room from dungeon generator");
             }
             
-            InitializeEnemyPool();
+            InitializeEnemyPools();
         }
     }
 
-    private void InitializeEnemyPool()
+    private void InitializeEnemyPools()
     {   
         if (isInitialized) return;
         
-        //create a pool of enemies based on the number of rooms and max enemies per room
-        int roomCount = FindObjectsOfType<RoomSpawnPoints>().Length;
-        int poolSize = roomCount * maxEnemiesPerRoom;
+        var allRooms = FindObjectsOfType<RoomSpawnPoints>();
+        int totalSpawnPoints = 0;
         
-        enemyPool = new ObjectPool(enemyPrefab, 0, poolContainer);
-        
-        //initialize pooled enemies
-        foreach (var obj in enemyPool.GetAllPooledObjects())
+        foreach (var room in allRooms)
         {
-            var pooledObj = obj.GetComponent<PooledObject>() ?? obj.AddComponent<PooledObject>();
-            pooledObj.SetSpawnManager(this);
-            obj.transform.SetParent(poolContainer);
+            if (room.spawnZones != null)
+            {
+                totalSpawnPoints += room.spawnZones.Count;
+            }
+        }
+        
+        foreach (var enemyType in enemyTypes)
+        {
+            GameObject prefabToUse = enemyType.enemyPrefab != null ? enemyType.enemyPrefab : defaultEnemyPrefab;
+            
+            if (prefabToUse == null)
+            {
+                Debug.LogError($"No prefab assigned for enemy type {enemyType.enemyName}");
+                continue;
+            }
+            
+            //pool size based on total spawn points
+            int poolSize = Mathf.CeilToInt(totalSpawnPoints * maxEnemiesPerSpawnPoint * enemyType.spawnWeight);
+            poolSize = Mathf.Max(poolSize, 10); //at least 10 of each
+            
+            //create a pool if one doesn't exist for this prefab
+            if (!enemyPools.ContainsKey(prefabToUse))
+            {
+                var pool = new ObjectPool(prefabToUse, poolSize, poolContainer);
+                enemyPools[prefabToUse] = pool;
+            }
+        }
+        
+        //at least one pool
+        if (enemyPools.Count == 0 && defaultEnemyPrefab != null)
+        {
+            int poolSize = totalSpawnPoints * maxEnemiesPerSpawnPoint;
+            var defaultPool = new ObjectPool(defaultEnemyPrefab, poolSize, poolContainer);
+            enemyPools[defaultEnemyPrefab] = defaultPool;
         }
 
         //used for portal activation
@@ -134,10 +187,13 @@ public class DungeonEnemyManager : MonoBehaviour
                 continue;
             }
             
-            // Count enemies in each room that has spawn zones
+            //count enemies by spawn points
             if (room.spawnZones != null && room.spawnZones.Count > 0)
             {
-                totalEnemiesInDungeon += Random.Range(minEnemiesPerRoom, maxEnemiesPerRoom + 1);
+                int spawnPoints = room.spawnZones.Count;
+                //divide by 4 so 50% of average enemies. i want player to kill some enemies so they get xp, but not be needed to kill most/all if they dont want to
+                int avgEnemiesPerPoint = Mathf.CeilToInt((minEnemiesPerSpawnPoint + maxEnemiesPerSpawnPoint) / 4f);
+                totalEnemiesInDungeon += spawnPoints * avgEnemiesPerPoint;
             }
         }
         
@@ -151,10 +207,10 @@ public class DungeonEnemyManager : MonoBehaviour
             return true;
         }
         
-        if (dungeonGenerator != null && dungeonGenerator.lastSpawnRoom != null)
+        if (dungeonGenerator != null && dungeonGenerator.startRoom != null)
         {
-            RoomSpawnPoints lastRoomSpawnPoints = dungeonGenerator.lastSpawnRoom.GetComponent<RoomSpawnPoints>();
-            if (lastRoomSpawnPoints == room)
+            RoomSpawnPoints startRoomSpawnPoints = dungeonGenerator.startRoom.GetComponent<RoomSpawnPoints>();
+            if (startRoomSpawnPoints == room)
             {
                 return true;
             }
@@ -262,8 +318,6 @@ public class DungeonEnemyManager : MonoBehaviour
         {
             spawnedEnemiesByRoom[room] = new List<GameObject>();
         }
-
-        int enemyCount = Random.Range(minEnemiesPerRoom, maxEnemiesPerRoom + 1);
         
         if (room.spawnZones == null || room.spawnZones.Count == 0)
         {
@@ -271,45 +325,30 @@ public class DungeonEnemyManager : MonoBehaviour
             return;
         }
         
-        var availableZones = new List<Transform>();
+        var validSpawnZones = new List<Transform>();
         
         foreach (var zone in room.spawnZones)
         {
             if (zone != null)
             {
-                availableZones.Add(zone);
+                validSpawnZones.Add(zone);
             }
         }
         
-        if (availableZones.Count == 0)
+        if (validSpawnZones.Count == 0)
         {
             Debug.LogWarning($"Room {room.gameObject.name} has no valid spawn zones");
             return;
         }
 
-        var selectedZones = new List<Transform>();
-
-        //rooms can have multiple spawn zones, randomly select a few to use
-        int zonesToUse = Mathf.Min(Random.Range(1, availableZones.Count + 1), availableZones.Count);
-        for (int i = 0; i < zonesToUse; i++)
-        {
-            int randomIndex = Random.Range(0, availableZones.Count);
-            selectedZones.Add(availableZones[randomIndex]);
-            availableZones.RemoveAt(randomIndex);
-        }
-
-        int remainingEnemies = enemyCount;
         int enemiesPlaced = 0;
         
-        foreach (var zone in selectedZones) //spawn enemies in selected zones
+        //populate each spawn zone
+        foreach (var zone in validSpawnZones)
         {
-            if (remainingEnemies <= 0) break;
+            int enemyCount = Random.Range(minEnemiesPerSpawnPoint, maxEnemiesPerSpawnPoint + 1);
             
-            int enemiesForZone = Mathf.CeilToInt((float)remainingEnemies / selectedZones.Count);
-            enemiesForZone = Mathf.Min(enemiesForZone, remainingEnemies);
-            remainingEnemies -= enemiesForZone;
-
-            for (int i = 0; i < enemiesForZone; i++)
+            for (int i = 0; i < enemyCount; i++)
             {
                 if (SpawnEnemyAtZone(room, zone))
                 {
@@ -337,14 +376,37 @@ public class DungeonEnemyManager : MonoBehaviour
             return false;
         }
 
-        GameObject enemy = enemyPool.GetObject(spawnPos);
-        if (enemy == null)
+        //appropriate prefab and pool
+        GameObject prefabToUse = enemyType.enemyPrefab != null ? enemyType.enemyPrefab : defaultEnemyPrefab;
+        if (prefabToUse == null)
         {
-            Debug.LogWarning("Enemy pool exhausted");
+            Debug.LogError("No valid prefab for enemy!");
             return false;
         }
 
-        enemy.GetComponent<EnemyController>().Initialize(enemyType.stats);
+        if (!enemyPools.TryGetValue(prefabToUse, out var pool))
+        {
+            Debug.LogWarning($"No pool for prefab {prefabToUse.name}");
+            return false;
+        }
+
+        GameObject enemy = pool.GetObject(spawnPos);
+        if (enemy == null)
+        {
+            Debug.LogWarning($"Enemy pool for {prefabToUse.name} exhausted");
+            return false;
+        }
+
+        //store which prefab this enemy is from for pooling purposes
+        enemyPrefabLookup[enemy] = prefabToUse;
+        
+        //get scaled stats
+        EnemyStats scaledStats = enemyType.stats.GetScaledVersion(playerLevel);
+        
+        //initialize with the correct SCALED stats and give it a PooledObject component if it doesnt exist
+        enemy.GetComponent<EnemyController>().Initialize(scaledStats);
+        var pooledObj = enemy.GetComponent<PooledObject>() ?? enemy.AddComponent<PooledObject>();
+        pooledObj.SetSpawnManager(this);
         
         spawnedEnemiesByRoom[room].Add(enemy);
         return true;
@@ -400,23 +462,6 @@ public class DungeonEnemyManager : MonoBehaviour
             return;
         }
 
-        if (bossRoom.spawnZones == null || bossRoom.spawnZones.Count == 0)
-        {
-            Debug.LogWarning($"Boss room {bossRoom.gameObject.name} has no spawn zones, using room center instead");
-
-            Vector3 spawnPosition = bossRoom.transform.position; //fallback spawnpoint in case no spawn zones
-            
-            if (IsPositionOnNavMesh(spawnPosition))
-            {
-                SpawnBossAtPosition(spawnPosition);
-            }
-            else
-            {
-                Debug.LogWarning("Failed to spawn boss on valid NavMesh position!");
-            }
-            return;
-        }
-
         var validSpawnZones = bossRoom.spawnZones.Where(zone => zone != null).ToList();
         if (validSpawnZones.Count == 0)
         {
@@ -443,7 +488,9 @@ public class DungeonEnemyManager : MonoBehaviour
         var bossController = boss.GetComponent<EnemyController>();
         if (bossController != null)
         {
-            bossController.Initialize(bossStats);
+            //sale boss stats
+            EnemyStats scaledBossStats = bossStats.GetScaledVersion(playerLevel);
+            bossController.Initialize(scaledBossStats);
         }
     }
     
@@ -471,25 +518,37 @@ public class DungeonEnemyManager : MonoBehaviour
     
     public void ReturnEnemyToPool(GameObject enemy)
     {
-        if (enemyPool == null) return;
+        if (enemy == null) return;
         
-        //remove from room tracking
-        bool removed = false;
-        foreach (var roomEntry in spawnedEnemiesByRoom)
+        //find the right pool
+        if (enemyPrefabLookup.TryGetValue(enemy, out GameObject prefab) && enemyPools.TryGetValue(prefab, out ObjectPool pool))
         {
-            if (roomEntry.Value.Remove(enemy))
+            //remove from room tracking
+            bool removed = false;
+            foreach (var roomEntry in spawnedEnemiesByRoom)
             {
-                removed = true;
-                break;
+                if (roomEntry.Value.Remove(enemy))
+                {
+                    removed = true;
+                    break;
+                }
             }
+            
+            if (removed)
+            {
+                totalSpawnedEnemies--;
+            }
+            
+            //remove from lookup before returning to pool
+            enemyPrefabLookup.Remove(enemy);
+            
+            //return to pool
+            enemy.transform.SetParent(poolContainer);
+            pool.ReturnObject(enemy);
+            return;
         }
-        
-        if (removed)
-        {
-            totalSpawnedEnemies--;
-        }
-        enemy.transform.SetParent(poolContainer);
-        enemyPool.ReturnObject(enemy);
+        Debug.LogWarning($"Failed to find pool for enemy {enemy.name}. Destroying instead.");
+        Destroy(enemy);
     }
 
     private bool IsPositionOnNavMesh(Vector3 position)

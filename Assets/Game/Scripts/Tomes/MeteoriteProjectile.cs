@@ -24,19 +24,19 @@ public class MeteoriteProjectile : MonoBehaviour
     public AudioClip meteorExplosionSFX;
     [Range(0f, 1f)] public float explosionVolume = 0.7f;
     [Range(0f, 1f)] public float explosionTimeOffset = 0.1f;  //skip empty part at beginning
-    private AudioSource _audioSource;
+    private AudioSource audioSource;
 
-    private Vector3 _targetPosition;
-    private Vector3 _startPosition;
-    private Vector3 _direction;
-    private bool _initialized = false;
-    private float _journeyLength;
-    private float _startTime;
+    private Vector3 targetPosition;
+    private Vector3 startPosition;
+    private Vector3 direction;
+    private bool initialized = false;
+    private float journeyLength;
+    private float startTime;
 
     public void Initialize(float damageAmount, Vector3 targetPos, GameObject burnPrefab, float burnDPS = 0, AudioClip burnSFX = null)
     {
         damage = damageAmount;
-        _targetPosition = targetPos;
+        targetPosition = targetPos;
         burnEffect = burnPrefab;
         burnDamagePerSecond = burnDPS;
         burningSoundEffect = burnSFX;  //store burn SFX directly
@@ -53,17 +53,17 @@ public class MeteoriteProjectile : MonoBehaviour
         );
         
         //create a starting position above and offset from the target
-        _startPosition = _targetPosition + horizontalOffset + Vector3.up * (randomDistance * 1.5f);
-        transform.position = _startPosition;
+        startPosition = targetPosition + horizontalOffset + Vector3.up * (randomDistance * 1.5f);
+        transform.position = startPosition;
         
-        _direction = (_targetPosition - _startPosition).normalized;
+        direction = (targetPosition - startPosition).normalized;
         
         //random rotation to the meteorite itself
-        transform.rotation = Quaternion.LookRotation(_direction) * Quaternion.Euler(0, 0, Random.Range(0, 360f));
+        transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 0, Random.Range(0, 360f));
         
-        _journeyLength = Vector3.Distance(_startPosition, _targetPosition);
-        _startTime = Time.time;
-        _initialized = true;
+        journeyLength = Vector3.Distance(startPosition, targetPosition);
+        startTime = Time.time;
+        initialized = true;
 
         Destroy(gameObject, lifetime);
     }
@@ -78,29 +78,29 @@ public class MeteoriteProjectile : MonoBehaviour
         }
         
         //audio source
-        _audioSource = gameObject.AddComponent<AudioSource>();
-        _audioSource.playOnAwake = false;
-        _audioSource.spatialBlend = 1.0f;
-        _audioSource.rolloffMode = AudioRolloffMode.Linear;
-        _audioSource.maxDistance = 30f;
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 1.0f;
+        audioSource.rolloffMode = AudioRolloffMode.Linear;
+        audioSource.maxDistance = 30f;
     }
 
     void Update()
     {
-        if (!_initialized) return;
+        if (!initialized) return;
 
         //move toward target along the calculated direction
         transform.position = Vector3.MoveTowards(
             transform.position,
-            _targetPosition,
+            targetPosition,
             fallSpeed * Time.deltaTime
         );
         
         //keep the meteorite facing its movement direction
-        transform.rotation = Quaternion.LookRotation(_direction) * Quaternion.Euler(0, 0, Time.time * 100f);
+        transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 0, Time.time * 100f);
 
         //check for impact
-        if (Vector3.Distance(transform.position, _targetPosition) < 0.1f)
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
             OnImpact();
         }

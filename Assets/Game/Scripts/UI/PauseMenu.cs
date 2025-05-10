@@ -11,7 +11,7 @@ public class PauseMenu : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private KeyCode pauseKey = KeyCode.Escape;
 
-    private bool _isPaused = false;
+    private bool isPaused = false;
     public static PauseMenu Instance { get; private set; }
 
     private void Awake()
@@ -49,9 +49,9 @@ public class PauseMenu : MonoBehaviour
 
     public void TogglePause()
     {
-        _isPaused = !_isPaused;
+        isPaused = !isPaused;
         
-        if (_isPaused)
+        if (isPaused)
         {
             PauseGame();
         }
@@ -64,7 +64,7 @@ public class PauseMenu : MonoBehaviour
     private void PauseGame()
     {
         pauseMenuPanel.SetActive(true);
-        _isPaused = true;
+        isPaused = true;
         Time.timeScale = 0f;
     }
 
@@ -73,7 +73,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuPanel.SetActive(false);
         Time.timeScale = 1f;
         
-        _isPaused = false;
+        isPaused = false;
     }
 
     public void QuitGame()
@@ -85,7 +85,7 @@ public class PauseMenu : MonoBehaviour
         #endif
     }
 
-    public bool IsPaused => _isPaused;
+    public bool IsPaused => isPaused;
     
     //setters for UI elements (for use in UIConnector) also listeners for buttons in case InitializeUI didnt set
     public void SetPauseMenuPanel(GameObject panel)

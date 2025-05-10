@@ -12,7 +12,7 @@ public class EnemyStats : ScriptableObject
     public int xpReward = 10;
 
     [Header("Scaling")]
-    public float healthScaling = 1.1f; // 10% increase per level so later dungeon dont feel too easy
+    public float healthScaling = 1.07f; //7% increase per level so later dungeon dont feel too easy (7%, at ~lvl 20 is ~120hp if 30 start)
     public float damageScaling = 1.05f;
 
     public EnemyStats GetScaledVersion(int level)

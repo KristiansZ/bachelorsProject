@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4982070941423357114}
   - component: {fileID: 800882085076271047}
   - component: {fileID: 67819278089047550}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Snowflakes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4912,7 +4912,7 @@ GameObject:
   - component: {fileID: 5613386152581022070}
   - component: {fileID: 7769279734447056017}
   - component: {fileID: 4017558984612606179}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: IceHail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9848,7 +9848,7 @@ GameObject:
   - component: {fileID: 6818156806287833478}
   - component: {fileID: 5217993143065018319}
   - component: {fileID: 4453027818046662019}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14748,7 +14748,7 @@ GameObject:
   - component: {fileID: 1903099789004297450}
   - component: {fileID: 2191631248208539131}
   - component: {fileID: 9223041221141223310}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19648,7 +19648,7 @@ GameObject:
   - component: {fileID: 1820535212616082993}
   - component: {fileID: 5322623110969192686}
   - component: {fileID: 6730434218193492016}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24548,7 +24548,7 @@ GameObject:
   - component: {fileID: 8212794341678762342}
   - component: {fileID: 6024059005292686684}
   - component: {fileID: 2347734497456126875}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29439,7 +29439,7 @@ GameObject:
   - component: {fileID: 1819905987343065137}
   - component: {fileID: 1854383201559764717}
   - component: {fileID: 8352224235110865108}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34332,7 +34332,7 @@ GameObject:
   - component: {fileID: 2216558781648428396}
   - component: {fileID: 7908491556203308475}
   - component: {fileID: 6054380711261653756}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}

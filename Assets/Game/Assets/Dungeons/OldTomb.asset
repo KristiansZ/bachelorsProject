@@ -15,6 +15,6 @@ MonoBehaviour:
   dungeonName: Old Tomb
   upgradeName: +1 to Life Regen
   upgradeType: 5
-  upgradeValue: 0
+  upgradeValue: 1
   roomCountMin: 10
   roomCountMax: 35

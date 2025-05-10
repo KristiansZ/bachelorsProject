@@ -4,19 +4,19 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, ICharacterController
 {
     public KinematicCharacterMotor Motor;
-    public float MoveSpeed = 5f;
+    public float MoveSpeed = 4f;
     public float RotationSpeed = 20f;
     public bool CanBePushed = false;
     public float Gravity = -30f;
     public float FallSpeedClamp = -50f;
 
-    private Vector3 _internalVelocity;
-    private bool _isForcedRotation;
-    private Quaternion _forcedRotation;
-    private float _rotationForceDuration;
+    private Vector3 internalVelocity;
+    private bool isForcedRotation;
+    private Quaternion forcedRotation;
+    private float rotationForceDuration;
     public Transform CameraTransform;
 
-    private Vector3 _moveInput;
+    private Vector3 moveInput;
 
     private void Awake()
     {
@@ -31,28 +31,28 @@ public class PlayerController : MonoBehaviour, ICharacterController
         
         if (direction != Vector3.zero)
         {
-            _isForcedRotation = true;
-            _forcedRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, -90, 0);
-            _rotationForceDuration = duration;
+            isForcedRotation = true;
+            forcedRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, -90, 0);
+            rotationForceDuration = duration;
         }
     }   
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
-        if (_isForcedRotation)
+        if (isForcedRotation)
         {
             currentRotation = Quaternion.Slerp(
                 currentRotation,
-                _forcedRotation,
+                forcedRotation,
                 RotationSpeed * 2f * deltaTime
             );
             
-            _rotationForceDuration -= deltaTime;
-            if (_rotationForceDuration <= 0) _isForcedRotation = false;
+            rotationForceDuration -= deltaTime;
+            if (rotationForceDuration <= 0) isForcedRotation = false;
             return;
         }
 
-        if (_moveInput != Vector3.zero)
+        if (moveInput != Vector3.zero)
         {
             Vector3 camForward = CameraTransform.forward;
             Vector3 camRight = CameraTransform.right;
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
             camForward.Normalize();
             camRight.Normalize();
 
-            Vector3 moveDirection = (camForward * _moveInput.z + camRight * _moveInput.x);
+            Vector3 moveDirection = (camForward * moveInput.z + camRight * moveInput.x);
 
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection) * Quaternion.Euler(0, -90, 0);
             
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
         camForward.Normalize();
         camRight.Normalize();
         
-        Vector3 moveDirection = (camForward * _moveInput.z + camRight * _moveInput.x).normalized;
+        Vector3 moveDirection = (camForward * moveInput.z + camRight * moveInput.x).normalized;
         
         currentVelocity.x = moveDirection.x * MoveSpeed;
         currentVelocity.z = moveDirection.z * MoveSpeed;
@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour, ICharacterController
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        _moveInput = new Vector3(horizontal, 0f, vertical).normalized;
+        moveInput = new Vector3(horizontal, 0f, vertical).normalized;
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) TomeController.Instance.SetActiveTome(0);
         if (Input.GetKeyDown(KeyCode.Alpha2)) TomeController.Instance.SetActiveTome(1);

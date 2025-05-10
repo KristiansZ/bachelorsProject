@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour
 
     [Header("Chase Settings")]
     [SerializeField] private float chaseUpdateRate = 0.03f;
-    [SerializeField] private float detectionRange = 12f;
+    [SerializeField] private float detectionRange = 15f;
 
     [Header("Sound Effects")]
     [SerializeField] private AudioClip attackSound;
@@ -321,7 +321,13 @@ public class EnemyController : MonoBehaviour
             float animSpeed = stats.attackSpeed;
             animator.SetFloat("AttackSpeedMultiplier", animSpeed);
 
-            yield return new WaitForSeconds(0.5f / animSpeed);
+            float attackInAnimation = 0.5f;
+            if (gameObject.name.ToLower().Contains("skeleton"))
+            {
+                attackInAnimation = 0.36f;
+            }
+
+            yield return new WaitForSeconds(attackInAnimation / animSpeed);
 
             if (Player.Instance != null && Player.Instance.DamageHandler != null)
             {
@@ -329,7 +335,7 @@ public class EnemyController : MonoBehaviour
                 Player.Instance.DamageHandler.HandleDamage(stats.damage);
             }
 
-            yield return new WaitForSeconds(attackCooldown - (0.5f / animSpeed));
+            yield return new WaitForSeconds(attackCooldown - (attackInAnimation / animSpeed));
         }
     }
 
@@ -360,6 +366,7 @@ public class EnemyController : MonoBehaviour
         if (audioSource != null && deathSound != null)
         {
             //higher priority to death sound
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.priority = 128;
             audioSource.PlayOneShot(deathSound);
         }

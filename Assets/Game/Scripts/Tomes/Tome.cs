@@ -8,7 +8,6 @@ public abstract class Tome : MonoBehaviour
 
     public GameObject projectilePrefab;
     public float damageMultiplier = 1f;
-    public float currentCooldown;
 
     [Header("Casting Behavior")]
     public bool enableContinuousCasting = true;
@@ -29,14 +28,14 @@ public abstract class Tome : MonoBehaviour
     //might want later     public AudioClip castSound; 
     public ParticleSystem castParticles;
 
-    protected float _currentDamage;
-    protected float _currentCooldown;
-    protected float _nextCastTime;
-    protected float _remainingCooldown;
-    protected AudioSource _audioSource;
-    protected Transform _playerCamera;
-    protected Transform _projectileSpawnPoint;
-    protected PlayerController _playerController;
+    protected float currentDamage;
+    protected float currentCooldown;
+    protected float nextCastTime;
+    protected float remainingCooldown;
+    protected AudioSource audioSource;
+    protected Transform playerCamera;
+    protected Transform projectileSpawnPoint;
+    protected PlayerController playerController;
 
     protected virtual void Awake()
     {
@@ -51,24 +50,24 @@ public abstract class Tome : MonoBehaviour
             };
         }
 
-        _currentDamage = stats.baseDamage * damageMultiplier;
-        _currentCooldown = stats.baseCooldown;
+        currentDamage = stats.baseDamage * damageMultiplier;
+        currentCooldown = stats.baseCooldown;
 
-        _audioSource = GetComponent<AudioSource>();
-        if (_audioSource == null)
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
         {
-            _audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        _playerCamera = Camera.main?.transform;
-        _playerController = GetComponentInParent<PlayerController>();
+        playerCamera = Camera.main?.transform;
+        playerController = GetComponentInParent<PlayerController>();
     }
 
     protected virtual void Update()
     {
-        if (_remainingCooldown > 0)
+        if (remainingCooldown > 0)
         {
-            _remainingCooldown = _nextCastTime - Time.time;
+            remainingCooldown = nextCastTime - Time.time;
         }
 
         if (enableContinuousCasting) //can hold M1 to cast
@@ -83,41 +82,41 @@ public abstract class Tome : MonoBehaviour
 
     protected void TryCastAtPosition()
     {
-        if (Time.time < _nextCastTime) return;
+        if (Time.time < nextCastTime) return;
 
-        Ray ray = _playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
         switch (castMode)
         {
             case CastMode.Directional:
                 if (Physics.Raycast(ray, out RaycastHit hitDir, 100f))
                 {
-                    Vector3 spawnPos = _projectileSpawnPoint != null ? _projectileSpawnPoint.position : _playerController.transform.position;
+                    Vector3 spawnPos = projectileSpawnPoint != null ? projectileSpawnPoint.position : playerController.transform.position;
                     Vector3 targetDirection = (hitDir.point - spawnPos).normalized;
                     targetDirection.y = 0;
 
-                    _playerController.LookAt(spawnPos + targetDirection);
+                    playerController.LookAt(spawnPos + targetDirection);
 
                     Vector3 targetPoint = spawnPos + targetDirection * stats.range;
 
                     ExecuteCast(targetPoint); //direction
 
                     PlayEffects();
-                    _nextCastTime = Time.time + _currentCooldown;
-                    _remainingCooldown = _currentCooldown;
+                    nextCastTime = Time.time + currentCooldown;
+                    remainingCooldown = currentCooldown;
                 }
                 break;
 
             case CastMode.Targeted:
                 if (Physics.Raycast(ray, out RaycastHit hitTargeted, stats.range))
                 {
-                    _playerController.LookAt(hitTargeted.point);
+                    playerController.LookAt(hitTargeted.point);
 
                     ExecuteCast(hitTargeted.point);//exact hit point
 
                     PlayEffects();
-                    _nextCastTime = Time.time + _currentCooldown;
-                    _remainingCooldown = _currentCooldown;
+                    nextCastTime = Time.time + currentCooldown;
+                    remainingCooldown = currentCooldown;
                 }
                 break;
         }
@@ -125,7 +124,7 @@ public abstract class Tome : MonoBehaviour
 
     protected void PlayEffects()
     {
-        //_audioSource?.PlayOneShot(castSound);
+        //audioSource?.PlayOneShot(castSound);
         castParticles?.Play();
     }
 
@@ -134,11 +133,11 @@ public abstract class Tome : MonoBehaviour
     #region Upgrades
     public virtual void UpgradeDamage(float percent) 
     {
-        _currentDamage = stats.baseDamage * (1 + percent) * damageMultiplier;
+        currentDamage = stats.baseDamage * (1 + percent) * damageMultiplier;
     }
 
     public virtual void UpgradeCooldown(float percent) 
-        => _currentCooldown = stats.baseCooldown * (1 - Mathf.Clamp01(percent));
+        => currentCooldown = stats.baseCooldown * (1 - Mathf.Clamp01(percent));
 
     #endregion
 }

@@ -14,12 +14,15 @@ public class TeleportingPortal : MonoBehaviour
     [SerializeField] private Vector3 dungeonScenePosition = new Vector3(0, 2, 0);
 
     [Header("Enemy Kill Tracking")]
-    [SerializeField] private float requiredKillPercentage = 0.75f; // 75% required
+    [SerializeField] private float requiredKillPercentage = 0.75f; //75% required
     public TextMeshProUGUI enemyKillText;
 
     [Header("Portal State")]
     [SerializeField] public DungeonSelector dungeonSelector;
     
+    [Header("Portal Recall")]
+    [SerializeField] private KeyCode recallKey = KeyCode.T;
+
     public static TeleportingPortal instance;
 
     private bool playerInRange = false;
@@ -83,6 +86,7 @@ public class TeleportingPortal : MonoBehaviour
         currentScene = SceneManager.GetActiveScene().name;
         bool isSafeSpace = currentScene == safeSceneName;
 
+        //check for portal teleport interaction
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && !isTransitioning)
         {
             if ((isSafeSpace && dungeonSelector != null && dungeonSelector.HasChosenDungeon()) ||
@@ -90,6 +94,11 @@ public class TeleportingPortal : MonoBehaviour
             {
                 StartCoroutine(FadeTeleport());
             }
+        }
+
+        if (Input.GetKeyDown(recallKey) && !isTransitioning && !isSafeSpace && isPortalActive)
+        {
+            RecallPortalToPlayer();
         }
     }
 
@@ -126,7 +135,7 @@ public class TeleportingPortal : MonoBehaviour
         {
             transform.position = dungeonScenePosition;
             
-            // check whether isBossDungeon is true or false now
+            //check whether isBossDungeon is true or false now
             if (DungeonProgressManager.Instance != null)
             {
                 isBossDungeon = DungeonProgressManager.Instance.IsBossDungeonAvailable();
@@ -141,16 +150,10 @@ public class TeleportingPortal : MonoBehaviour
         isTransitioning = false;
     }
 
-    public void RegisterTotalEnemyCount(int count)
+    public void RegisterTotalEnemyCount(int actualSpawnedCount)
     {
-        totalEnemies = count;
+        totalEnemies = actualSpawnedCount;
         killedEnemies = 0;
-        
-        if (isBossDungeon || count == 1) //if boss dungeon or only one enemy (only 1 enemy in bos dungeon)
-        {
-            isBossDungeon = true;
-        }
-        
         UpdateEnemyKillUI();
     }
 
@@ -169,22 +172,15 @@ public class TeleportingPortal : MonoBehaviour
 
     private void UpdatePortalState()
     {
-        if (totalEnemies > 0)
-        {
-            if (isBossDungeon && killedEnemies > 0) //only need to kill one enemy in boss dungeon for portal to be usable
-            {
-                if (!isPortalActive)
-                {
-                    ActivatePortal();
-                }
-                return;
-            }
+        if (totalEnemies <= 0) return;
 
-            float percentage = (float)killedEnemies / totalEnemies;
-            if (percentage >= requiredKillPercentage && !isPortalActive)
-            {
-                ActivatePortal();
-            }
+        bool shouldActivate = isBossDungeon ? 
+            killedEnemies > 0 : 
+            ((float)killedEnemies / totalEnemies) >= requiredKillPercentage;
+
+        if (shouldActivate && !isPortalActive)
+        {
+            ActivatePortal();
         }
     }
 
@@ -196,21 +192,39 @@ public class TeleportingPortal : MonoBehaviour
 
     private void UpdateEnemyKillUI()
     {
-        if (enemyKillText != null && totalEnemies > 0)
+        if (enemyKillText == null || totalEnemies <= 0) return;
+
+        if (isBossDungeon)
         {
-            if (isBossDungeon) //for boss dungeon, show 0% or 100% if one enemy is killed
-            {
-                int bossPercentage = killedEnemies > 0 ? 100 : 0;
-                enemyKillText.text = $"Portal Activation: {bossPercentage}%";
-                return;
-            }
-            
-            float killPercentage = (float)killedEnemies / totalEnemies;
-            float activationPercentage = Mathf.Min(1.0f, killPercentage / requiredKillPercentage) * 100f;
-            int portalActivationDisplay = Mathf.RoundToInt(activationPercentage);
-            
-            enemyKillText.text = $"Portal Activation: {portalActivationDisplay}%";
+            enemyKillText.text = killedEnemies > 0 ? "Portal Active" : "Defeat the Boss";
+            return;
         }
+
+        float killPercentage = (float)killedEnemies / totalEnemies;
+        float activationPercentage = Mathf.Min(1.0f, killPercentage / requiredKillPercentage) * 100f;
+        int portalActivationDisplay = Mathf.RoundToInt(activationPercentage);
+            
+        string portalText = $"Portal Activation: {portalActivationDisplay}%";
+        if (isPortalActive)
+        {
+            portalText += " (Press T to call portal)";
+        }
+        
+        enemyKillText.text = portalText;
+    }
+
+    private void RecallPortalToPlayer()
+    {
+        if (!isPortalActive || currentScene == safeSceneName) return;
+
+        //find the player
+        KinematicCharacterMotor player = FindObjectOfType<KinematicCharacterMotor>();
+        if (player == null) return;
+
+        //get player position and move the portal
+        Vector3 newPosition = player.transform.position;
+        newPosition.y = player.transform.position.y;
+        transform.position = newPosition;
     }
 
     private IEnumerator FadeTeleport()
@@ -257,7 +271,7 @@ public class TeleportingPortal : MonoBehaviour
         {
             returnedFromDungeon = true;
             
-            if (DungeonProgressManager.Instance != null) // regular dungeon completed
+            if (DungeonProgressManager.Instance != null) //regular dungeon completed
             {
                 DungeonProgressManager.Instance.CompleteDungeon(dungeonSelector.GetSelectedDungeon());
             }
@@ -333,7 +347,7 @@ public class TeleportingPortal : MonoBehaviour
         }
     }
 
-    // when dungeon is selected in dungeon selector.
+    //when dungeon is selected in dungeon selector.
     public void OnDungeonSelected()
     {
         SetPortalVisibility(true);

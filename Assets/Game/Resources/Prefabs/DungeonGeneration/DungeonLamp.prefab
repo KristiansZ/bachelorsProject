@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 3879761181456643742}
   - component: {fileID: 6365702507981799061}
   - component: {fileID: 4475242897362392707}
+  - component: {fileID: -5785699720365376606}
   m_Layer: 0
   m_Name: DungeonLamp
   m_TagString: Untagged
@@ -197,6 +198,27 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2534964839176971238, guid: 81af4b816f308e8448679811d9cd2175, type: 3}
+--- !u!114 &-5785699720365376606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5470774026551528573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f103b1509a9f68c4d9feda33b63359d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultColour: {r: 0, g: 0, b: 0, a: 0}
+  activatedColour: {r: 0, g: 0, b: 0, a: 0}
+  colorTransitionSpeed: 3
+  playerTag: Player
+  detectionRadius: 5
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  lampLight: {fileID: 0}
 --- !u!1 &7333684516490991480
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,7 +270,7 @@ Light:
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: -1
+    m_Resolution: 128
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
@@ -280,7 +302,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -309,7 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Version: 3
   m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 0
+  m_AdditionalLightsShadowResolutionTier: -1
   m_LightLayerMask: 1
   m_RenderingLayers: 1
   m_CustomShadowLayers: 0

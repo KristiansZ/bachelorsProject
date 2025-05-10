@@ -15,6 +15,6 @@ MonoBehaviour:
   dungeonName: Necropolis
   upgradeName: Faster Life Regen
   upgradeType: 6
-  upgradeValue: 0
-  roomCountMin: 20
-  roomCountMax: 40
+  upgradeValue: 0.2
+  roomCountMin: 15
+  roomCountMax: 30

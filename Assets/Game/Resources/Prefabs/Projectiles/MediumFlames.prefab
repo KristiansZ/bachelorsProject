@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4469749203399680}
   - component: {fileID: 198104970619360998}
   - component: {fileID: 199570947319072982}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MediumFlames
   m_TagString: Untagged
   m_Icon: {fileID: 0}

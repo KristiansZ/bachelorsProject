@@ -15,6 +15,6 @@ MonoBehaviour:
   dungeonName: Old Ruins
   upgradeName: +2 Armour
   upgradeType: 1
-  upgradeValue: 0
+  upgradeValue: 2
   roomCountMin: 10
   roomCountMax: 20

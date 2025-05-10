@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1273317484271503212}
   - component: {fileID: 7801443128531719507}
   - component: {fileID: 5165716803717384429}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rockball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,6 +149,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b2d0bc9406b9545b5e1ae5c5517ce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  lifetime: 3
-  impactEffect: {fileID: 0}
+  rockImpactSFX: {fileID: 0}
+  impactVolume: 0.8

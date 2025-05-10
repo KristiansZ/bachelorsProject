@@ -13,7 +13,7 @@ public class Room : MonoBehaviour
             spawnPoints = gameObject.AddComponent<RoomSpawnPoints>();
     }
 
-    // returns a random available connection point
+    //returns a random available connection point
     public ConnectionPoint GetAvailableConnection()
     {
         List<ConnectionPoint> availablePoints = new List<ConnectionPoint>();
@@ -28,7 +28,7 @@ public class Room : MonoBehaviour
             null;
     }
 
-    // returns all available connection points for room/hallway
+    //returns all available connection points for room/hallway
     public List<ConnectionPoint> GetAllAvailableConnections()
     {
         List<ConnectionPoint> availablePoints = new List<ConnectionPoint>();

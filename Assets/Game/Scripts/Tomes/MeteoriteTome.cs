@@ -37,9 +37,9 @@ public class MeteoriteTome : Tome
 
     protected override void ExecuteCast(Vector3 targetPosition)
     {
-        if (_playerController == null) return;
+        if (playerController == null) return;
 
-        Vector3 playerPosition = _playerController.transform.position;
+        Vector3 playerPosition = playerController.transform.position;
         Vector3 flatTarget = new Vector3(targetPosition.x, playerPosition.y, targetPosition.z);
 
         float distance = Vector3.Distance(playerPosition, flatTarget);
@@ -51,7 +51,7 @@ public class MeteoriteTome : Tome
             flatTarget = playerPosition + direction * maxCastDistance;
         }
 
-        _playerController.ForceLookAt(flatTarget);
+        playerController.ForceLookAt(flatTarget);
 
         Vector3 spawnPosition = flatTarget + Vector3.up * spawnHeight;
         var meteor = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
@@ -66,7 +66,7 @@ public class MeteoriteTome : Tome
         meteorProjectile.leavesBurningGround = createsBurnZone;
         
         meteorProjectile.SetImpactRadiusMultiplier(impactRadiusMultiplier);
-        meteorProjectile.Initialize(_currentDamage, flatTarget, burnEffect, burnDamagePerSecond, burningSFX);
+        meteorProjectile.Initialize(currentDamage, flatTarget, burnEffect, burnDamagePerSecond, burningSFX);
     }
 
     public void EnableBurnZone(GameObject effectPrefab, float damage = 30f)

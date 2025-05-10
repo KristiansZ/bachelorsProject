@@ -19,12 +19,12 @@ public class BlankTome : Tome
 
     protected override void ExecuteCast(Vector3 targetPosition)
     {
-        if (_playerController == null) return;
+        if (playerController == null) return;
 
-        _playerController.ForceLookAt(targetPosition);
+        playerController.ForceLookAt(targetPosition);
 
-        Vector3 spawnPos = _playerController.transform.position + 
-                           _playerController.transform.forward * rockBallOffset;
+        Vector3 spawnPos = playerController.transform.position + 
+                           playerController.transform.forward * rockBallOffset;
 
         spawnPos.y = 2f; //fixed spawn height
 
@@ -46,7 +46,7 @@ public class BlankTome : Tome
             Vector3 velocity = direction * stats.projectileSpeed;
 
             rockBall.Initialize(
-                _currentDamage,
+                currentDamage,
                 velocity,
                 stats.range
             );

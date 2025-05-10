@@ -21,9 +21,9 @@ public class IceHailTome : Tome
 
     protected override void ExecuteCast(Vector3 centerPosition)
     {
-        _playerController.ForceLookAt(centerPosition);
+        playerController.ForceLookAt(centerPosition);
 
-        Vector3 playerPosition = _playerController.transform.position;
+        Vector3 playerPosition = playerController.transform.position;
         Vector3 flatTarget = new Vector3(centerPosition.x, playerPosition.y, centerPosition.z);
         float distance = Vector3.Distance(playerPosition, flatTarget);
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ZombieBossStats
   m_EditorClassIdentifier: 
   maxHealth: 1200
-  moveSpeed: 4.5
+  moveSpeed: 4.2
   attackSpeed: 1.8
   damage: 33
   attackRange: 2.5

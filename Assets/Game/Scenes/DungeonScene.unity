@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &275306126
+--- !u!1 &302781902
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,24 +127,71 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 275306127}
+  - component: {fileID: 302781906}
+  - component: {fileID: 302781905}
+  - component: {fileID: 302781904}
+  - component: {fileID: 302781903}
   m_Layer: 0
-  m_Name: UpgradeSystem
+  m_Name: PlayerFellOutTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &275306127
+--- !u!114 &302781903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302781902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a38482c87744f54995a6be477685dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loseSceneName: LoseMenuScene
+  sceneLoadDelay: 0.5
+  playerTag: Player
+--- !u!65 &302781904
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302781902}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 500, y: 10, z: 500}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &302781905
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302781902}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &302781906
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 275306126}
+  m_GameObject: {fileID: 302781902}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 213.95654, y: 108.14161, z: 24.044014}
+  m_LocalPosition: {x: 0, y: -15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -368,15 +415,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a4bd578719ccf4bb43a33538d3acb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
+  defaultEnemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
   player: {fileID: 0}
   dungeonGenerator: {fileID: 1772309357}
   enemyTypes:
-  - stats: {fileID: 11400000, guid: 25f49c2305d1bfa4bacfd768940ea237, type: 2}
+  - enemyName: Zombie
+    enemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
+    stats: {fileID: 11400000, guid: 25f49c2305d1bfa4bacfd768940ea237, type: 2}
+    spawnWeight: 2
+    validRoomTypes: 0000000001000000
+  - enemyName: Skeleton
+    enemyPrefab: {fileID: 8664161326398101375, guid: f5166da793b846b4690ab84a0d7b9bdb, type: 3}
+    stats: {fileID: 11400000, guid: ae9dd701540d3a441aa02dc1490ee300, type: 2}
     spawnWeight: 1
     validRoomTypes: 0000000001000000
-  minEnemiesPerRoom: 2
-  maxEnemiesPerRoom: 5
+  minEnemiesPerSpawnPoint: 1
+  maxEnemiesPerSpawnPoint: 2
   activationDistance: 30
   deactivationDistance: 40
   bossPrefab: {fileID: 62651155189986703, guid: 7da27222843cc8d40b88755665cbb7d8, type: 3}
@@ -433,6 +487,7 @@ MonoBehaviour:
   - {fileID: 7628543517710004694, guid: ae057c2c1e89f5949b0b3f8204783bad, type: 3}
   - {fileID: 5029134256166850599, guid: 2f8e27a8a339cbd46a5287a2f91c5fd3, type: 3}
   - {fileID: 3233770326169351505, guid: 076ae4b517ef3684e855cd46011e8e53, type: 3}
+  - {fileID: 272468010359083322, guid: 338772651ad8f22418dbb2cb83e8a278, type: 3}
   bossRoomPrefab: {fileID: 674437599055235821, guid: 1ac46a4290c293946aeeaad1d0ec1a82, type: 3}
   hallwayPrefabs:
   - {fileID: 7453117641797499398, guid: 2b2f0a6c6b46d454e94ee2cfd7df1ab5, type: 3}
@@ -445,7 +500,7 @@ MonoBehaviour:
   spawnedRooms: []
   spawnedHallways: []
   allSpawnedObjects: []
-  lastSpawnRoom: {fileID: 0}
+  startRoom: {fileID: 0}
 --- !u!4 &1772309358
 Transform:
   m_ObjectHideFlags: 0
@@ -490,6 +545,10 @@ MonoBehaviour:
   meshValidationRays: 5
   meshValidationRadius: 0.5
   minRayHitPercentage: 0.6
+  defaultLampColour: {r: 0.9245283, g: 0.29654348, b: 0.047970813, a: 1}
+  activatedLampColour: {r: 0, g: 1, b: 0, a: 1}
+  playerDetectionRadius: 5
+  playerTag: Player
 --- !u!1 &1821263937
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,8 +600,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 832575519}
   - {fileID: 941727541}
-  - {fileID: 275306127}
   - {fileID: 1772309358}
   - {fileID: 1404596693}
   - {fileID: 1007756973}
   - {fileID: 1821263939}
+  - {fileID: 302781906}

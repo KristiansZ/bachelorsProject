@@ -15,7 +15,7 @@ public class PlayerStatManager : MonoBehaviour
     public float lifeRegenerationInterval = 5f;
 
     [Header("References")]
-    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private PlayerController playerController;
 
     private bool isDead = false;
 
@@ -25,8 +25,8 @@ public class PlayerStatManager : MonoBehaviour
         currentMoveSpeed = baseMoveSpeed;
         StartCoroutine(LifeRegenerationCoroutine());
 
-        if (_playerController == null)
-            _playerController = GetComponent<PlayerController>();
+        if (playerController == null)
+            playerController = GetComponent<PlayerController>();
         
         UpdateMovementSpeed();
     }
@@ -66,9 +66,9 @@ public class PlayerStatManager : MonoBehaviour
 
     private void UpdateMovementSpeed()
     {
-        if (_playerController != null)
+        if (playerController != null)
         {
-            _playerController.MoveSpeed = currentMoveSpeed;
+            playerController.MoveSpeed = currentMoveSpeed;
         }
     }
 

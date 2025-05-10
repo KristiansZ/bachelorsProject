@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3932776283654362326}
   - component: {fileID: 2645177491260039311}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,7 +153,7 @@ GameObject:
   - component: {fileID: 453931356012911453}
   - component: {fileID: 1263279298564830006}
   - component: {fileID: -518638729106362424}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Meteorite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,8 +272,10 @@ MonoBehaviour:
   burnEffect: {fileID: 0}
   burnDuration: 4
   burnDamagePerSecond: 15
+  burningSoundEffect: {fileID: 0}
   meteorExplosionSFX: {fileID: 0}
   explosionVolume: 1
+  explosionTimeOffset: 0.1
 --- !u!54 &-518638729106362424
 Rigidbody:
   m_ObjectHideFlags: 0

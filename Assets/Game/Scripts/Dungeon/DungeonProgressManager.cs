@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class DungeonProgressManager : MonoBehaviour
 {
-    private static DungeonProgressManager _instance; //local
-    public static DungeonProgressManager Instance { get { return _instance; } } //for other scripts
+    private static DungeonProgressManager instance; //local
+    public static DungeonProgressManager Instance { get { return instance; } } //for other scripts
 
     [SerializeField] private int dungeonsCompletedCount = 0;
     [SerializeField] private int dungeonsNeededForBoss = 3;
@@ -19,12 +19,12 @@ public class DungeonProgressManager : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        _instance = this;
+        instance = this;
     }
 
     public void CompleteDungeon(DungeonOption completedDungeon = null)

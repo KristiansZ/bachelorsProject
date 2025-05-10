@@ -22,13 +22,13 @@ public class FireballTome : Tome
 
     protected override void ExecuteCast(Vector3 targetPosition)
     {
-        if (_playerController == null) return;
+        if (playerController == null) return;
 
-        _playerController.ForceLookAt(targetPosition);
+        playerController.ForceLookAt(targetPosition);
 
-        Vector3 spawnPos = _projectileSpawnPoint != null
-            ? _projectileSpawnPoint.position
-            : _playerController.transform.position + Vector3.up * 1.5f + _playerController.transform.forward * fireballOffset;
+        Vector3 spawnPos = projectileSpawnPoint != null
+            ? projectileSpawnPoint.position
+            : playerController.transform.position + Vector3.up * 1.5f + playerController.transform.forward * fireballOffset;
 
         spawnPos.y = 2f;
 

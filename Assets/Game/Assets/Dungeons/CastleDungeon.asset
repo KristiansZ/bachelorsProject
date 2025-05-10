@@ -15,6 +15,6 @@ MonoBehaviour:
   dungeonName: CastleDungeon
   upgradeName: +10% Damage
   upgradeType: 4
-  upgradeValue: 0
-  roomCountMin: 15
-  roomCountMax: 30
+  upgradeValue: 0.1
+  roomCountMin: 13
+  roomCountMax: 25

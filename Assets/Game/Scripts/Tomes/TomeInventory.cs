@@ -5,7 +5,7 @@ public class TomeInventory : MonoBehaviour
     [Header("References")]
     [SerializeField] private TomeDisplay tomeDisplay;
     
-    private TomeType[] _equippedTomes = new TomeType[3];
+    private TomeType[] equippedTomes = new TomeType[3];
 
     [Header("Audio")]
     [SerializeField] private AudioClip switchTomeSFX;
@@ -30,7 +30,7 @@ public class TomeInventory : MonoBehaviour
 
     private void InitializeEmptySlots()
     {
-        for (int i = 0; i < _equippedTomes.Length; i++)
+        for (int i = 0; i < equippedTomes.Length; i++)
         {
             UpdateTomeSlot(i, TomeType.None, tomeDisplay.emptySlotSprite);
         }
@@ -41,14 +41,14 @@ public class TomeInventory : MonoBehaviour
         if (!IsValidSlot(targetSlotIndex)) return;
         
         //find existing tome in other slot
-        for (int i = 0; i < _equippedTomes.Length; i++)
+        for (int i = 0; i < equippedTomes.Length; i++)
         {
-            if (_equippedTomes[i] == newTome)
+            if (equippedTomes[i] == newTome)
             {
                 //swap contents
-                TomeType oldTome = _equippedTomes[targetSlotIndex];
-                _equippedTomes[targetSlotIndex] = newTome;
-                _equippedTomes[i] = oldTome;
+                TomeType oldTome = equippedTomes[targetSlotIndex];
+                equippedTomes[targetSlotIndex] = newTome;
+                equippedTomes[i] = oldTome;
                 
                 UpdateBothSlots(targetSlotIndex, i);
                 PlaySwitchTomeSound();
@@ -57,7 +57,7 @@ public class TomeInventory : MonoBehaviour
         }
         
         //no duplicate found - normal equip
-        _equippedTomes[targetSlotIndex] = newTome;
+        equippedTomes[targetSlotIndex] = newTome;
         UpdateTomeSlot(targetSlotIndex, newTome, GetTomeIcon(newTome));
         TomeController.Instance.AssignTomeToSlot(newTome, targetSlotIndex);
         PlaySwitchTomeSound();
@@ -65,8 +65,8 @@ public class TomeInventory : MonoBehaviour
 
     private void UpdateBothSlots(int slotA, int slotB)
     {
-        UpdateTomeSlot(slotA, _equippedTomes[slotA], GetTomeIcon(_equippedTomes[slotA]));
-        UpdateTomeSlot(slotB, _equippedTomes[slotB], GetTomeIcon(_equippedTomes[slotB]));
+        UpdateTomeSlot(slotA, equippedTomes[slotA], GetTomeIcon(equippedTomes[slotA]));
+        UpdateTomeSlot(slotB, equippedTomes[slotB], GetTomeIcon(equippedTomes[slotB]));
     }
 
     private void UpdateTomeSlot(int slotIndex, TomeType tomeType, Sprite icon)
@@ -100,5 +100,5 @@ public class TomeInventory : MonoBehaviour
     }
     
 
-    private bool IsValidSlot(int index) => index >= 0 && index < _equippedTomes.Length;
+    private bool IsValidSlot(int index) => index >= 0 && index < equippedTomes.Length;
 }
