@@ -79,6 +79,13 @@ public class PlayerLeveling : MonoBehaviour
         });
 
         availableUpgrades.Add(new TomeUpgrade {
+            upgradeName = "All Tomes 5% faster Attack Speed",
+            upgradeType = UpgradeType.GlobalAttackSpeed,
+            floatValue = 0.95f,
+            affectedTome = TomeType.None
+        });
+
+        availableUpgrades.Add(new TomeUpgrade {
             upgradeName = "Life Regeneration +1",
             upgradeType = UpgradeType.LifeRegenAdd,
             floatValue = 1f,
@@ -86,7 +93,7 @@ public class PlayerLeveling : MonoBehaviour
         });
 
         availableUpgrades.Add(new TomeUpgrade {
-            upgradeName = "Life Regeneration 10% Faster",
+            upgradeName = "Faster Life Regeneration -0.1s",
             upgradeType = UpgradeType.LifeRegenRate,
             floatValue = 0.1f,
             affectedTome = TomeType.None
@@ -104,6 +111,13 @@ public class PlayerLeveling : MonoBehaviour
             upgradeName = "Fireball Speed +15%",
             upgradeType = UpgradeType.ProjectileSpeed,
             floatValue = 0.15f,
+            affectedTome = TomeType.FireballTome
+        });
+
+        availableUpgrades.Add(new TomeUpgrade {
+            upgradeName = "Fireball +1 Projectile",
+            upgradeType = UpgradeType.ProjectileCount,
+            floatValue = 1f,
             affectedTome = TomeType.FireballTome
         });
 
@@ -186,6 +200,9 @@ public class PlayerLeveling : MonoBehaviour
             case UpgradeType.GlobalDamage:
                 tomeController.ApplyGlobalDamageBonus(upgrade.floatValue);
                 break;
+            case UpgradeType.GlobalAttackSpeed:
+                tomeController.ApplyGlobalAttackSpeed(upgrade.floatValue);
+                break;
             case UpgradeType.LifeRegenAdd:
                 playerStats.IncreaseLifeRegenerationAmount(upgrade.floatValue);
                 break;
@@ -194,6 +211,7 @@ public class PlayerLeveling : MonoBehaviour
                 break;
             case UpgradeType.ProjectileSize:
             case UpgradeType.AreaOfEffect:
+            case UpgradeType.ProjectileCount:
             case UpgradeType.ProjectileSpeed:
             case UpgradeType.DamageOverTime:
                 tomeController.ApplyTomeUpgrade(upgrade.affectedTome, upgrade.upgradeType, upgrade.floatValue);

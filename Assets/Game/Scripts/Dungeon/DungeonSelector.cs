@@ -35,6 +35,25 @@ public class DungeonSelector : MonoBehaviour
 
     void SelectRandomDungeons()
     {
+        //boss dungeon selection
+        if (DungeonProgressManager.Instance.IsBossDungeonAvailable())
+        {
+            for (int i = 0; i < dungeonOptions.Length; i++)
+            {
+                if (dungeonOptions[i].isBossDungeon)
+                {
+                    for (int j = 0; j < 3; j++)
+                    {
+                        selectedIndices[j] = i;
+                    }
+                    return;
+                }
+            }
+            Debug.LogWarning("No boss dungeon found in dungeon options!");
+            return;
+        }
+
+        //normal dungeon selection
         if (dungeonOptions.Length <= 3)
         {
             for (int i = 0; i < dungeonOptions.Length; i++)
@@ -47,7 +66,11 @@ public class DungeonSelector : MonoBehaviour
         List<int> availableIndices = new List<int>();
         for (int i = 0; i < dungeonOptions.Length; i++)
         {
-            availableIndices.Add(i);
+            //exclude boss dungeons from regular selection
+            if (!dungeonOptions[i].isBossDungeon)
+            {
+                availableIndices.Add(i);
+            }
         }
 
         for (int i = 0; i < 3; i++)
@@ -66,16 +89,32 @@ public class DungeonSelector : MonoBehaviour
 
     void SetupMenu()
     {
+        foreach (var optionText in optionTexts)
+        {
+            optionText.text = "Dungeon Option";
+        }
+
+        //boss dungeons
+        if (DungeonProgressManager.Instance.IsBossDungeonAvailable())
+        {
+            for (int i = 0; i < optionTexts.Length; i++)
+            {
+                if (selectedIndices[i] < dungeonOptions.Length)
+                {
+                    DungeonOption option = dungeonOptions[selectedIndices[i]];
+                    optionTexts[i].text = $"{option.dungeonName}\nBOSS DUNGEON";
+                }
+            }
+            return;
+        }
+
+        //normal dungeons
         for (int i = 0; i < optionTexts.Length; i++)
         {
             if (i < 3 && i < selectedIndices.Length && selectedIndices[i] < dungeonOptions.Length)
             {
                 DungeonOption option = dungeonOptions[selectedIndices[i]];
                 optionTexts[i].text = $"{option.dungeonName}\nUpgrade: {option.upgradeName}";
-            }
-            else
-            {
-                optionTexts[i].text = "Unavailable";
             }
         }
     }

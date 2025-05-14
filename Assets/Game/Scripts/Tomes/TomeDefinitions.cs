@@ -20,6 +20,7 @@ public enum UpgradeType
     PlayerMovementSpeed,
     PlayerCooldownReduction,
     GlobalDamage,
+    GlobalAttackSpeed,
     LifeRegenAdd,
     LifeRegenRate,
     

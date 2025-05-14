@@ -9,4 +9,5 @@ public class DungeonOption : ScriptableObject
     public float upgradeValue;
     public int roomCountMin;
     public int roomCountMax;
+    public bool isBossDungeon;
 }

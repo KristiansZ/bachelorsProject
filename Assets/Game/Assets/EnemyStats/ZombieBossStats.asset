@@ -18,5 +18,5 @@ MonoBehaviour:
   damage: 33
   attackRange: 2.5
   xpReward: 100
-  healthScaling: 1.1
+  healthScaling: 1.05
   damageScaling: 1.05

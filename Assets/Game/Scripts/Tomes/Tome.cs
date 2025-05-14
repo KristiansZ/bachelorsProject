@@ -133,11 +133,14 @@ public abstract class Tome : MonoBehaviour
     #region Upgrades
     public virtual void UpgradeDamage(float percent) 
     {
-        currentDamage = stats.baseDamage * (1 + percent) * damageMultiplier;
+        currentDamage = currentDamage * (1 + percent) * damageMultiplier;
+        stats.baseDamage = currentDamage;
     }
 
     public virtual void UpgradeCooldown(float percent) 
-        => currentCooldown = stats.baseCooldown * (1 - Mathf.Clamp01(percent));
-
+    {
+        currentCooldown = currentCooldown * (1 - Mathf.Clamp01(percent));
+        stats.baseCooldown = currentCooldown;
+    }
     #endregion
 }

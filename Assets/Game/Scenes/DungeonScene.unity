@@ -418,6 +418,7 @@ MonoBehaviour:
   defaultEnemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
   player: {fileID: 0}
   dungeonGenerator: {fileID: 1772309357}
+  playerLeveling: {fileID: 0}
   enemyTypes:
   - enemyName: Zombie
     enemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
@@ -430,7 +431,7 @@ MonoBehaviour:
     spawnWeight: 1
     validRoomTypes: 0000000001000000
   minEnemiesPerSpawnPoint: 1
-  maxEnemiesPerSpawnPoint: 2
+  maxEnemiesPerSpawnPoint: 4
   activationDistance: 30
   deactivationDistance: 40
   bossPrefab: {fileID: 62651155189986703, guid: 7da27222843cc8d40b88755665cbb7d8, type: 3}

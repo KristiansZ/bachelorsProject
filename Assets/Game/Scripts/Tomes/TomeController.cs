@@ -143,12 +143,32 @@ public class TomeController : MonoBehaviour
 
         globalDamageBonus += bonus;
 
-        //iterate through equipped tomes and apply bonus
+        //apply damage
         foreach (var tome in equippedTomes)
         {
             tome.damageMultiplier += bonus;
         }
     }
+
+    public void ApplyGlobalAttackSpeed(float bonus)
+{
+    if (equippedTomes == null)
+    {
+        Debug.LogError("equippedTomes is null!");
+        return;
+    }
+
+    float cooldownReductionPercent = 1f - bonus;
+
+    //iterate through equipped tomes and apply cooldown bonus
+    foreach (var tome in equippedTomes)
+    {
+        if (tome != null)
+        {
+            tome.UpgradeCooldown(cooldownReductionPercent);
+        }
+    }
+}
 
     public void ApplyTomeUpgrade(TomeType tomeType, UpgradeType upgradeType, float value)
     {
@@ -177,6 +197,13 @@ public class TomeController : MonoBehaviour
                 if (tome is FireballTome fireballTomeSize)
                 {
                     fireballTomeSize.UpgradeProjectileSize(value);
+                }
+                break;
+
+            case UpgradeType.ProjectileCount:
+                if (tome is FireballTome fireballTomeProjCount)
+                {
+                    fireballTomeProjCount.AddProjectile();
                 }
                 break;
                     

@@ -16,6 +16,7 @@ MonoBehaviour:
   moveSpeed: 4.5
   attackSpeed: 1
   damage: 10
+  attackRange: 1.8
   xpReward: 10
-  healthScaling: 1.1
+  healthScaling: 1.07
   damageScaling: 1.05

@@ -360,8 +360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8783a8252a56e94499be62cba0bfc59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineColor: {r: 0.68907976, g: 0.8962263, b: 0.8962264, a: 1}
-  outlineWidth: 0.02
 --- !u!1 &1546729242
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,8 +427,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8783a8252a56e94499be62cba0bfc59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineColor: {r: 0.4130473, g: 0.735849, b: 0.6735568, a: 1}
-  outlineWidth: 0.02
 --- !u!1 &2047116703
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,6 +528,14 @@ PrefabInstance:
       propertyPath: outlineColor.r
       value: 0.7176471
       objectReference: {fileID: 0}
+    - target: {fileID: 8364357084747617507, guid: 3304562c89efdc5479ddd24dbcac502f, type: 3}
+      propertyPath: dungeonOptions.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8364357084747617507, guid: 3304562c89efdc5479ddd24dbcac502f, type: 3}
+      propertyPath: 'dungeonOptions.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c7041edd81bda7447957c468625445e6, type: 2}
     - target: {fileID: 8509629492025186288, guid: 3304562c89efdc5479ddd24dbcac502f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

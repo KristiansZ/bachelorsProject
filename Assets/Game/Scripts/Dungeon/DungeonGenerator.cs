@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.AI;
 using UnityEngine;
+using System.Linq;
 
 public class DungeonGenerator : MonoBehaviour
 {
@@ -251,13 +252,44 @@ public class DungeonGenerator : MonoBehaviour
 
     void CapUnusedConnections()
     {
-        //cap rooms
+        List<ConnectionPoint> allUnusedPoints = new List<ConnectionPoint>();
+        
+        foreach (Room room in spawnedRooms)//collect all unused points from rooms and hallways
+        {
+            allUnusedPoints.AddRange(room.connectionPoints.Where(p => !p.isConnected));
+        }
+        foreach (Room hallway in spawnedHallways)
+        {
+            allUnusedPoints.AddRange(hallway.connectionPoints.Where(p => !p.isConnected));
+        }
+
+        for (int i = 0; i < allUnusedPoints.Count; i++)//check for nearby points (in case of loops)
+        {
+            ConnectionPoint currentPoint = allUnusedPoints[i];
+
+            for (int j = i + 1; j < allUnusedPoints.Count; j++)//find nearby points in other rooms/hallways
+            {
+                ConnectionPoint otherPoint = allUnusedPoints[j];
+
+                float distance = Vector3.Distance(
+                    currentPoint.transform.position, 
+                    otherPoint.transform.position
+                );
+
+                if (distance < 1f)//if points are close, mark both as connected
+                {
+                    currentPoint.isConnected = true;
+                    otherPoint.isConnected = true;
+                    break;
+                }
+            }
+        }
+
+        //cap unused connections
         foreach (Room room in spawnedRooms)
         {
             CapRoomConnections(room);
         }
-
-        //cap hallways
         foreach (Room hallway in spawnedHallways)
         {
             CapRoomConnections(hallway);
