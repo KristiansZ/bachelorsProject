@@ -12,9 +12,6 @@ public class PlayerDamageHandler : MonoBehaviour
     [SerializeField] private float damageFlashDuration = 0.1f;
     [SerializeField] private GameObject hitVFXPrefab;
 
-    [Header("Audio")]
-    [SerializeField] private AudioClip[] hitSounds;
-
     private PlayerStatManager statManager;
     private AudioSource audioSource;
     private Renderer[] renderers;
@@ -60,7 +57,6 @@ public class PlayerDamageHandler : MonoBehaviour
 
     private void OnDamageTaken()
     {
-        PlayRandomHitSound();
         StartCoroutine(ShakeOnHit());
         StartCoroutine(FlashOnHit());
         
@@ -68,15 +64,6 @@ public class PlayerDamageHandler : MonoBehaviour
         {
             GameObject vfx = Instantiate(hitVFXPrefab, transform.position, Quaternion.identity);
             Destroy(vfx, 2f);
-        }
-    }
-
-    private void PlayRandomHitSound()
-    {
-        if (hitSounds != null && hitSounds.Length > 0 && audioSource != null)
-        {
-            AudioClip randomHitSound = hitSounds[Random.Range(0, hitSounds.Length)];
-            audioSource.PlayOneShot(randomHitSound);
         }
     }
 

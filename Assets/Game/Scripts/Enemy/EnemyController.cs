@@ -37,8 +37,6 @@ public class EnemyController : MonoBehaviour
     private Coroutine currentStateRoutine;
     private State currentState;
 
-    private bool isBurning;
-    private float burningTimer;
     private float attackCooldown;
     
     private bool isInitialized = false;
@@ -401,33 +399,6 @@ public class EnemyController : MonoBehaviour
         }
 
         slowCoroutine = null;
-    }
-
-    public void StartBurning(float damage, float duration)
-    {
-        if (isDead) return;
-        
-        if (!isBurning)
-        {
-            isBurning = true;
-            burningTimer = 0f;
-            StartCoroutine(BurnCoroutine(damage, duration));
-        }
-    }
-
-    IEnumerator BurnCoroutine(float damage, float duration)
-    {
-        WaitForSeconds tickInterval = new WaitForSeconds(0.5f);
-
-        while (burningTimer < duration && !isDead)
-        {
-            yield return tickInterval;
-            
-            TakeDamage(damage);
-            burningTimer += 0.5f;
-        }
-
-        isBurning = false;
     }
 
     #endregion

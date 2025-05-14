@@ -81,7 +81,7 @@ public class PlayerStatManager : MonoBehaviour
 
     public void IncreaseArmour(float amount) => armour += amount;
 
-    public void IncreaseMovementSpeed(float amount)
+    public void IncreaseMovementSpeed(float amount) //not used in game yet
     {
         currentMoveSpeed = currentMoveSpeed + amount;
         UpdateMovementSpeed();

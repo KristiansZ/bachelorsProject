@@ -44,7 +44,7 @@ public class FireballTome : Tome
         for (int i = 0; i < extraProjectiles; i++)
         {
             Vector3 spread = Quaternion.Euler(
-                Random.Range(-spreadAngle, spreadAngle),
+                0,
                 Random.Range(-spreadAngle, spreadAngle),
                 0
             ) * direction;
@@ -77,7 +77,7 @@ public class FireballTome : Tome
 
     #region Upgrades
     public void AddProjectile() => extraProjectiles++;
-    public void IncreaseSpread(float amount) => spreadAngle += amount;
+    public void IncreaseSpread(float amount) => spreadAngle += amount; //not yet used
     public void UpgradeProjectileSize(float value) => scaleMultiplier += value;
     #endregion
 }

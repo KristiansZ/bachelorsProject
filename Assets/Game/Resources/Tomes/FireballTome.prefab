@@ -54,7 +54,6 @@ MonoBehaviour:
   castMode: 0
   projectilePrefab: {fileID: 1307734381382588898, guid: a001e49e8a32dc34a9455b3a2413ce46, type: 3}
   damageMultiplier: 1
-  currentCooldown: 0
   enableContinuousCasting: 1
   stats:
     baseDamage: 20
