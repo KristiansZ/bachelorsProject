@@ -423,17 +423,16 @@ MonoBehaviour:
   - enemyName: Zombie
     enemyPrefab: {fileID: 62651155189986703, guid: 3ed3dedc5fef7644cabf530b1c71e9a8, type: 3}
     stats: {fileID: 11400000, guid: 25f49c2305d1bfa4bacfd768940ea237, type: 2}
-    spawnWeight: 2
+    spawnWeight: 0.6
     validRoomTypes: 0000000001000000
   - enemyName: Skeleton
     enemyPrefab: {fileID: 8664161326398101375, guid: f5166da793b846b4690ab84a0d7b9bdb, type: 3}
     stats: {fileID: 11400000, guid: ae9dd701540d3a441aa02dc1490ee300, type: 2}
-    spawnWeight: 1
+    spawnWeight: 0.4
     validRoomTypes: 0000000001000000
   minEnemiesPerSpawnPoint: 1
   maxEnemiesPerSpawnPoint: 4
   activationDistance: 30
-  deactivationDistance: 40
   bossPrefab: {fileID: 62651155189986703, guid: 7da27222843cc8d40b88755665cbb7d8, type: 3}
   bossStats: {fileID: 11400000, guid: b3cca282617085d4e98453b69277c5a9, type: 2}
   bossRoomType: 2

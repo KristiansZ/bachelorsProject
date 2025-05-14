@@ -26,7 +26,6 @@ public class DungeonEnemyManager : MonoBehaviour
     [SerializeField] int minEnemiesPerSpawnPoint = 1; 
     [SerializeField] int maxEnemiesPerSpawnPoint = 4; 
     [SerializeField] float activationDistance = 30f;
-    [SerializeField] float deactivationDistance = 40f;
 
     [Header("Boss Settings")]
     [SerializeField] GameObject bossPrefab;
@@ -272,14 +271,6 @@ public class DungeonEnemyManager : MonoBehaviour
                     }
                 }
             }
-            else if (distance > deactivationDistance)
-            {
-                //deactivate enemies in rooms that became inactive
-                if (activeRooms.Contains(room))
-                {
-                    DeactivateRoom(room);
-                }
-            }
         }
         
         activeRooms = newActiveRooms;
@@ -491,28 +482,6 @@ public class DungeonEnemyManager : MonoBehaviour
             //sale boss stats
             EnemyStats scaledBossStats = bossStats.GetScaledVersion(playerLevel);
             bossController.Initialize(scaledBossStats);
-        }
-    }
-    
-    private void DeactivateRoom(RoomSpawnPoints room)
-    {
-        if (spawnedEnemiesByRoom.TryGetValue(room, out var enemies))
-        {
-            int deactivatedCount = 0;
-            foreach (var enemy in enemies.ToList())
-            {
-                if (enemy != null && enemy.activeSelf)
-                {
-                    enemy.SetActive(false);
-                    enemy.transform.SetParent(poolContainer);
-                    deactivatedCount++;
-                }
-                else if (enemy == null)
-                {
-                    enemies.Remove(enemy);
-                }
-            }
-            Debug.Log($"Deactivated {deactivatedCount} enemies in {room.gameObject.name}");
         }
     }
     

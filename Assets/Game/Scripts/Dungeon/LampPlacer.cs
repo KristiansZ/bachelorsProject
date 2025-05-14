@@ -10,7 +10,6 @@ public class LampPlacer : MonoBehaviour
     public int maxLampsPerRoom = 4;
     public int maxLampsPerHallway = 2;
     public float placementProbability = 0.8f;
-    public bool placeOnlyInCorners = false;
     
     [Header("Placement Adjustments")]
     public float heightOffset = 0.0f;
@@ -47,7 +46,6 @@ public class LampPlacer : MonoBehaviour
     
     public void PlaceLampsInDungeon()
     {
-        ClearExistingLamps();
         
         foreach (Room room in dungeonGenerator.spawnedRooms)
         {
@@ -84,59 +82,44 @@ public class LampPlacer : MonoBehaviour
             Vector3 position;
             Vector3 wallDirection = Vector3.zero;
             
-            if (placeOnlyInCorners && lampPositions.Count < 4)
+            
+            int side = Random.Range(0, 4);
+            
+            if (side == 0)
             {
-                float xOffset = Random.value > 0.5f ? 1 : -1;
-                float zOffset = Random.value > 0.5f ? 1 : -1;
-                
                 position = roomCenter + new Vector3(
-                    xOffset * (roomExtents.x - wallOffset),
+                    Random.Range(-roomExtents.x + wallOffset, roomExtents.x - wallOffset),
                     0,
-                    zOffset * (roomExtents.z - wallOffset)
+                    roomExtents.z - wallOffset
                 );
-                
-                wallDirection = new Vector3(-xOffset, 0, -zOffset).normalized;
+                wallDirection = Vector3.back;
             }
-            else //random position and wall side
+            else if (side == 1)
             {
-                int side = Random.Range(0, 4);
-                
-                if (side == 0)
-                {
-                    position = roomCenter + new Vector3(
-                        Random.Range(-roomExtents.x + wallOffset, roomExtents.x - wallOffset),
-                        0,
-                        roomExtents.z - wallOffset
-                    );
-                    wallDirection = Vector3.back;
-                }
-                else if (side == 1)
-                {
-                    position = roomCenter + new Vector3(
-                        roomExtents.x - wallOffset,
-                        0,
-                        Random.Range(-roomExtents.z + wallOffset, roomExtents.z - wallOffset)
-                    );
-                    wallDirection = Vector3.left;
-                }
-                else if (side == 2)
-                {
-                    position = roomCenter + new Vector3(
-                        Random.Range(-roomExtents.x + wallOffset, roomExtents.x - wallOffset),
-                        0,
-                        -roomExtents.z + wallOffset
-                    );
-                    wallDirection = Vector3.forward;
-                }
-                else
-                {
-                    position = roomCenter + new Vector3(
-                        -roomExtents.x + wallOffset,
-                        0,
-                        Random.Range(-roomExtents.z + wallOffset, roomExtents.z - wallOffset)
-                    );
-                    wallDirection = Vector3.right;
-                }
+                position = roomCenter + new Vector3(
+                    roomExtents.x - wallOffset,
+                    0,
+                    Random.Range(-roomExtents.z + wallOffset, roomExtents.z - wallOffset)
+                );
+                wallDirection = Vector3.left;
+            }
+            else if (side == 2)
+            {
+                position = roomCenter + new Vector3(
+                    Random.Range(-roomExtents.x + wallOffset, roomExtents.x - wallOffset),
+                    0,
+                    -roomExtents.z + wallOffset
+                );
+                wallDirection = Vector3.forward;
+            }
+            else
+            {
+                position = roomCenter + new Vector3(
+                    -roomExtents.x + wallOffset,
+                    0,
+                    Random.Range(-roomExtents.z + wallOffset, roomExtents.z - wallOffset)
+                );
+                wallDirection = Vector3.right;
             }
             
             //check if position is valid (not too close to other lamps and has floor mesh)
@@ -255,23 +238,6 @@ public class LampPlacer : MonoBehaviour
         }
         
         spawnedLamps.Add(lamp);
-        dungeonGenerator.allSpawnedObjects.Add(lamp);
-    }
-    
-    private void ClearExistingLamps() //clear lamps
-    {
-        foreach (GameObject lamp in spawnedLamps)
-        {
-            if (lamp != null)
-            {
-                if (dungeonGenerator != null && dungeonGenerator.allSpawnedObjects.Contains(lamp))
-                {
-                    dungeonGenerator.allSpawnedObjects.Remove(lamp);
-                }
-                Destroy(lamp);
-            }
-        }
-        spawnedLamps.Clear();
     }
     
     private Bounds GetRoomBounds(GameObject roomObject)
