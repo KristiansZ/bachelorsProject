@@ -10,13 +10,15 @@ public class IceHailTome : Tome
     public float slowDuration = 2f;
     public float maxCastDistance = 10f;
 
-    void Start()
+    protected override void Awake()
     {
         stats = new TomeStats {
             baseDamage = 5f,
-            baseCooldown = 1.5f,
+            baseCooldown = 3f,
             range = 20f
         };
+        
+        base.Awake(); //call base class awake
     }
 
     protected override void ExecuteCast(Vector3 centerPosition)

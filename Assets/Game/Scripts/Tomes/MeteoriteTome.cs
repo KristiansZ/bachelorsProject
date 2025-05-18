@@ -15,15 +15,14 @@ public class MeteoriteTome : Tome
     public AudioClip meteorExplosionSFX;
     public AudioClip burningSFX;
 
-    void Start()
+     protected override void Awake()
     {
         stats = new TomeStats {
             baseDamage = 60f,
-            baseCooldown = 3f,
+            baseCooldown = 5f,
             range = 30f
         };
-        
-        //verify sound references
+
         if (burningSFX == null)
         {
             Debug.LogWarning("burningSFX not assigned");
@@ -33,6 +32,8 @@ public class MeteoriteTome : Tome
         {
             Debug.LogWarning("meteorExplosionSFX not assigned");
         }
+        
+        base.Awake(); //call base class awake
     }
 
     protected override void ExecuteCast(Vector3 targetPosition)

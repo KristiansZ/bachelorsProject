@@ -54,6 +54,7 @@ public class DungeonGenerator : MonoBehaviour
             
             if (spawnedRooms.Count + spawnedHallways.Count >= roomCount * 0.7f) //atleast 70% of rooms got generated
             {
+                Debug.Log(attempt);
                 StartCoroutine(BuildNavMeshAfterDelay(0.2f));
                 return;
             }

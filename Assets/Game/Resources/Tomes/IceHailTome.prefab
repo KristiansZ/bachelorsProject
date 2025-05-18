@@ -155,7 +155,7 @@ Transform:
   m_GameObject: {fileID: 2768908959092788076}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.593914, y: -4.7656627, z: -13.513839}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -179,14 +179,12 @@ MonoBehaviour:
   castMode: 1
   projectilePrefab: {fileID: 0}
   damageMultiplier: 1
-  currentCooldown: 0
   enableContinuousCasting: 1
   stats:
     baseDamage: 5
     baseCooldown: 2.3
     projectileSpeed: 0
     range: 10
-  castSound: {fileID: 0}
   castParticles: {fileID: 5467385947748928828, guid: 2c544abeaeff84c479fe6dc2af37d2b9, type: 3}
   hailPrefab: {fileID: 2138571052389943380, guid: 583e9c041660488469fcbc40cc8e11c1, type: 3}
   baseHailCount: 1

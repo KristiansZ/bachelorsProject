@@ -41,7 +41,7 @@ public class DungeonEnemyManager : MonoBehaviour
     private RoomSpawnPoints startRoom;
     private bool isInitialized = false;
     private bool isNavMeshReady = false;
-    private int totalEnemiesInDungeon = 0;
+    private int enemiesToKill = 0;
     private bool hasRegisteredTotalWithPortal = false;
     private int totalSpawnedEnemies = 0;
     private bool isBossDungeon = false;
@@ -71,7 +71,6 @@ public class DungeonEnemyManager : MonoBehaviour
         if (playerLeveling != null)
         {
             playerLevel = playerLeveling.currentLevel;
-            Debug.Log($"Player level for enemy scaling: {playerLevel}");
         }
         else
         {
@@ -146,8 +145,8 @@ public class DungeonEnemyManager : MonoBehaviour
                 continue;
             }
             
-            //pool size based on total spawn points
-            int poolSize = Mathf.CeilToInt(totalSpawnPoints * maxEnemiesPerSpawnPoint * enemyType.spawnWeight);
+            //pool size based on average enemie per spawn point
+            int poolSize = Mathf.CeilToInt(totalSpawnPoints * (maxEnemiesPerSpawnPoint / 2f) * enemyType.spawnWeight);
             poolSize = Mathf.Max(poolSize, 10); //at least 10 of each
             
             //create a pool if one doesn't exist for this prefab
@@ -176,7 +175,7 @@ public class DungeonEnemyManager : MonoBehaviour
     private void CalculateTotalEnemyCount()
     {
         var allRooms = FindObjectsOfType<RoomSpawnPoints>();
-        totalEnemiesInDungeon = 0;
+        enemiesToKill = 0;
         
         foreach (var room in allRooms)
         {
@@ -190,9 +189,8 @@ public class DungeonEnemyManager : MonoBehaviour
             if (room.spawnZones != null && room.spawnZones.Count > 0)
             {
                 int spawnPoints = room.spawnZones.Count;
-                //divide by 4 so 50% of average enemies. i want player to kill some enemies so they get xp, but not be needed to kill most/all if they dont want to
-                int avgEnemiesPerPoint = Mathf.CeilToInt((minEnemiesPerSpawnPoint + maxEnemiesPerSpawnPoint) / 4f);
-                totalEnemiesInDungeon += spawnPoints * avgEnemiesPerPoint;
+                //use min enemies that can spawn, dont want the player to be forced to look for enemies, if they dont want to
+                enemiesToKill += spawnPoints * minEnemiesPerSpawnPoint;
             }
         }
         
@@ -222,7 +220,7 @@ public class DungeonEnemyManager : MonoBehaviour
     {
         if (!hasRegisteredTotalWithPortal && TeleportingPortal.instance != null)
         {
-            TeleportingPortal.instance.RegisterTotalEnemyCount(totalEnemiesInDungeon);
+            TeleportingPortal.instance.RegisterTotalEnemyCount(enemiesToKill);
             hasRegisteredTotalWithPortal = true;
         }
     }
@@ -230,8 +228,6 @@ public class DungeonEnemyManager : MonoBehaviour
     void Update()
     {
         if (!isNavMeshReady || !isInitialized) return;
-        
-        RegisterTotalEnemiesWithPortal();
         
         if (player != null)
         {

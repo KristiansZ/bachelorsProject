@@ -14,7 +14,6 @@ public class TeleportingPortal : MonoBehaviour
     [SerializeField] private Vector3 dungeonScenePosition = new Vector3(0, 2, 0);
 
     [Header("Enemy Kill Tracking")]
-    [SerializeField] private float requiredKillPercentage = 0.75f; //75% required
     public TextMeshProUGUI enemyKillText;
 
     [Header("Portal State")]
@@ -176,7 +175,7 @@ public class TeleportingPortal : MonoBehaviour
 
         bool shouldActivate = isBossDungeon ? 
             killedEnemies > 0 : 
-            ((float)killedEnemies / totalEnemies) >= requiredKillPercentage;
+            ((float)killedEnemies / totalEnemies) >= 1f;
 
         if (shouldActivate && !isPortalActive)
         {
@@ -201,7 +200,7 @@ public class TeleportingPortal : MonoBehaviour
         }
 
         float killPercentage = (float)killedEnemies / totalEnemies;
-        float activationPercentage = Mathf.Min(1.0f, killPercentage / requiredKillPercentage) * 100f;
+        float activationPercentage = Mathf.Min(1.0f, killPercentage) * 100f;
         int portalActivationDisplay = Mathf.RoundToInt(activationPercentage);
             
         string portalText = $"Portal Activation: {portalActivationDisplay}%";
@@ -223,7 +222,7 @@ public class TeleportingPortal : MonoBehaviour
 
         //get player position and move the portal
         Vector3 newPosition = player.transform.position;
-        newPosition.y = player.transform.position.y;
+        newPosition.y = player.transform.position.y + 1f;
         transform.position = newPosition;
     }
 

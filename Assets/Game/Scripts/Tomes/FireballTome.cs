@@ -9,7 +9,7 @@ public class FireballTome : Tome
     public float scaleMultiplier = 1f;
     public AudioClip fireballSFX;
 
-    private void Start()
+    protected override void Awake()
     {
         stats = new TomeStats
         {
@@ -18,6 +18,8 @@ public class FireballTome : Tome
             projectileSpeed = 15f,
             range = 25f
         };
+        
+        base.Awake(); //call base class awake
     }
 
     protected override void ExecuteCast(Vector3 targetPosition)
@@ -37,7 +39,6 @@ public class FireballTome : Tome
         direction = direction.normalized;
 
         float finalDamage = stats.baseDamage * (1f + TomeController.Instance.globalDamageBonus);
-
 
         LaunchProjectile(spawnPos, direction, finalDamage);
 
@@ -59,7 +60,6 @@ public class FireballTome : Tome
         projectile.transform.localScale *= scaleMultiplier;
 
         FireballProjectile fireball = projectile.GetComponent<FireballProjectile>();
-
 
         if (fireball != null)
         {

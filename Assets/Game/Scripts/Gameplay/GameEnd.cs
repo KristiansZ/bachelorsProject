@@ -50,9 +50,9 @@ public class GameEnd : MonoBehaviour
     private void QuitGame()
     {
         Application.Quit();
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#endif
+        #endif
     }
 
     private void DestroyAllDontDestroyOnLoadObjects()

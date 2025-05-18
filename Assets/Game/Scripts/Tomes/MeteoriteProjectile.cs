@@ -143,7 +143,8 @@ public class MeteoriteProjectile : MonoBehaviour
             Vector3 burnSpawnPosition = transform.position;
             if (GetComponent<Collider>() != null)
             {
-                burnSpawnPosition += Vector3.down * (GetComponent<Collider>().bounds.extents.y);
+                float bottomOfObject = transform.position.y - GetComponent<Collider>().bounds.extents.y;
+                burnSpawnPosition.y = bottomOfObject + 1.5f;
             }
 
             GameObject burn = Instantiate(burnEffect, burnSpawnPosition, Quaternion.identity);

@@ -74,7 +74,10 @@ public class TomeController : MonoBehaviour
         activeTomeIndex = Mathf.Clamp(index, 0, 2);
 
         if (equippedTomes[activeTomeIndex] != null)
+        {
             equippedTomes[activeTomeIndex].gameObject.SetActive(true);
+            equippedTomes[activeTomeIndex].OnTomeEquipped();
+        }
 
         tomeDisplay.SetSelectedSlot(activeTomeIndex);
     }
