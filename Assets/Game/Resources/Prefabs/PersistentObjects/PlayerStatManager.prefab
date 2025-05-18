@@ -46,9 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  armour: 0
+  armour: 1
   baseMoveSpeed: 4
   currentMoveSpeed: 0
   lifeRegenerationAmount: 1
-  lifeRegenerationInterval: 5
-  _playerController: {fileID: 4873730917005811011, guid: e11b8077c0906884f81b8b0167a63105, type: 3}
+  lifeRegenerationInterval: 3
+  playerController: {fileID: 0}

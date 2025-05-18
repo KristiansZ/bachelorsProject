@@ -10,14 +10,15 @@ public class MeteoriteTome : Tome
     public float burnDamagePerSecond = 15f;
     public float maxCastDistance = 10f;
     public float impactRadiusMultiplier = 1f;
-    
+
     [Header("Sound Effects")]
     public AudioClip meteorExplosionSFX;
     public AudioClip burningSFX;
 
-     protected override void Awake()
+    protected override void Awake()
     {
-        stats = new TomeStats {
+        stats = new TomeStats
+        {
             baseDamage = 60f,
             baseCooldown = 5f,
             range = 30f
@@ -27,12 +28,12 @@ public class MeteoriteTome : Tome
         {
             Debug.LogWarning("burningSFX not assigned");
         }
-        
+
         if (meteorExplosionSFX == null)
         {
             Debug.LogWarning("meteorExplosionSFX not assigned");
         }
-        
+
         base.Awake(); //call base class awake
     }
 
@@ -57,7 +58,7 @@ public class MeteoriteTome : Tome
         Vector3 spawnPosition = flatTarget + Vector3.up * spawnHeight;
         var meteor = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
         var meteorProjectile = meteor.GetComponent<MeteoriteProjectile>();
-        
+
         if (meteorExplosionSFX != null)//assign sound effects to the projectile
         {
             meteorProjectile.meteorExplosionSFX = meteorExplosionSFX;
@@ -65,7 +66,7 @@ public class MeteoriteTome : Tome
 
         //set leavesBurningGround directly on the projectile
         meteorProjectile.leavesBurningGround = createsBurnZone;
-        
+
         meteorProjectile.SetImpactRadiusMultiplier(impactRadiusMultiplier);
         meteorProjectile.Initialize(currentDamage, flatTarget, burnEffect, burnDamagePerSecond, burningSFX);
     }
@@ -80,5 +81,6 @@ public class MeteoriteTome : Tome
     #region Upgrades
     public void UpgradeImpactRadius(float value) => impactRadiusMultiplier += value;
     public void UpgradeBurnDamage(float value) => burnDamagePerSecond += value;
+    public void UpgradeFallSpeed(float value) => meteorPrefab.GetComponent<MeteoriteProjectile>().fallSpeed += value;
     #endregion
 }

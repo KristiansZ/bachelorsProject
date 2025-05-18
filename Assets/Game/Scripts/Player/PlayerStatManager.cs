@@ -12,7 +12,7 @@ public class PlayerStatManager : MonoBehaviour
     public float baseMoveSpeed = 5f;
     public float currentMoveSpeed;
     public float lifeRegenerationAmount = 1f;
-    public float lifeRegenerationInterval = 5f;
+    public float lifeRegenerationInterval = 3f;
 
     [Header("References")]
     [SerializeField] private PlayerController playerController;

@@ -23,11 +23,12 @@ public enum UpgradeType
     GlobalAttackSpeed,
     LifeRegenAdd,
     LifeRegenRate,
-    
+
     // Tome-specific upgrades
     ProjectileSize,
     ProjectileSpeed,
     ProjectileCount,
     AreaOfEffect,
     DamageOverTime,
+    MeteorFallSpeed
 }

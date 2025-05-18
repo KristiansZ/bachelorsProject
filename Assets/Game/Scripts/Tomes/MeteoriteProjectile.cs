@@ -4,7 +4,7 @@ using System.Linq;
 public class MeteoriteProjectile : MonoBehaviour
 {
     [Header("Settings")]
-    public float damage = 150f;
+    public float damage = 60f;
     public float lifetime = 5f;
     public float fallSpeed = 15f;
     public float impactRadius = 3f;

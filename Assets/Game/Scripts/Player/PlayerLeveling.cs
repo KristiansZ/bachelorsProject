@@ -57,42 +57,48 @@ public class PlayerLeveling : MonoBehaviour
     private void InitializeUpgradePool()
     {
         // global upgrades
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Max Health +20",
             upgradeType = UpgradeType.PlayerHealth,
             floatValue = 20f,
             affectedTome = TomeType.None
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Armour +2",
             upgradeType = UpgradeType.PlayerArmour,
             floatValue = 2f,
             affectedTome = TomeType.None
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "All Tomes Damage +10%",
             upgradeType = UpgradeType.GlobalDamage,
             floatValue = 0.1f,
             affectedTome = TomeType.None
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "All Tomes 5% faster Attack Speed",
             upgradeType = UpgradeType.GlobalAttackSpeed,
             floatValue = 0.95f,
             affectedTome = TomeType.None
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Life Regeneration +1",
             upgradeType = UpgradeType.LifeRegenAdd,
             floatValue = 1f,
             affectedTome = TomeType.None
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Faster Life Regeneration -0.1s",
             upgradeType = UpgradeType.LifeRegenRate,
             floatValue = 0.1f,
@@ -100,21 +106,24 @@ public class PlayerLeveling : MonoBehaviour
         });
 
         // Fireball Tome 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Fireball Size +20%",
             upgradeType = UpgradeType.ProjectileSize,
             floatValue = 0.2f,
             affectedTome = TomeType.FireballTome
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Fireball Speed +15%",
             upgradeType = UpgradeType.ProjectileSpeed,
             floatValue = 0.15f,
             affectedTome = TomeType.FireballTome
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Fireball +1 Projectile",
             upgradeType = UpgradeType.ProjectileCount,
             floatValue = 1f,
@@ -122,16 +131,25 @@ public class PlayerLeveling : MonoBehaviour
         });
 
         // Meteorite Tome
-        availableUpgrades.Add(new TomeUpgrade {
+        availableUpgrades.Add(new TomeUpgrade
+        {
             upgradeName = "Meteor AoE +20%",
             upgradeType = UpgradeType.AreaOfEffect,
             floatValue = 0.2f,
             affectedTome = TomeType.MeteoriteTome
         });
 
-        availableUpgrades.Add(new TomeUpgrade {
-            upgradeName = "Meteor Burn Damage +33%",
+        availableUpgrades.Add(new TomeUpgrade
+        {
+            upgradeName = "Meteor Burn Damage +5 DPS",
             upgradeType = UpgradeType.DamageOverTime,
+            floatValue = 5f,
+            affectedTome = TomeType.MeteoriteTome
+        });
+        
+        availableUpgrades.Add(new TomeUpgrade {
+            upgradeName = "Meteor fall speed +5m/s",
+            upgradeType = UpgradeType.MeteorFallSpeed,
             floatValue = 5f,
             affectedTome = TomeType.MeteoriteTome
         });
@@ -214,6 +232,7 @@ public class PlayerLeveling : MonoBehaviour
             case UpgradeType.ProjectileCount:
             case UpgradeType.ProjectileSpeed:
             case UpgradeType.DamageOverTime:
+            case UpgradeType.MeteorFallSpeed:
                 tomeController.ApplyTomeUpgrade(upgrade.affectedTome, upgrade.upgradeType, upgrade.floatValue);
                 break;
         }

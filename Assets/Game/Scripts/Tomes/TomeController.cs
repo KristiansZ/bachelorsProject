@@ -209,18 +209,25 @@ public class TomeController : MonoBehaviour
                     fireballTomeProjCount.AddProjectile();
                 }
                 break;
-                    
+
             case UpgradeType.AreaOfEffect:
                 if (tome is MeteoriteTome meteoriteTomeArea)
                 {
                     meteoriteTomeArea.UpgradeImpactRadius(value);
                 }
                 break;
-                
+
             case UpgradeType.DamageOverTime:
                 if (tome is MeteoriteTome meteoriteTomeDOT)
                 {
                     meteoriteTomeDOT.UpgradeBurnDamage(value);
+                }
+                break;
+
+            case UpgradeType.MeteorFallSpeed:
+                if (tome is MeteoriteTome meteoriteTomeSpeed)
+                {
+                    meteoriteTomeSpeed.UpgradeFallSpeed(value);
                 }
                 break;
                 
